@@ -1,5 +1,3 @@
 bin
-compile.bat
-genlexer.bat
-genparser.bat
-run.bat
+*.bat
+*.sh
