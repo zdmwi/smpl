@@ -49,9 +49,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Add the given value to this value
      * @param arg The value to be added.
-     * @return The sum of the two values as a new instance of FnPlotValue.
-     * @throws fnplot.sys.FnPlotException if there is a type incompatibility 
-     * between this value and the argument value under addition
+     * @return The sum of the two values as a new instance of SMPLValue.
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under addition
      */
     public SMPLValue<?> add(SMPLValue<?> arg) throws RuntimeException {
         throw new SMPLTypeException("Operation div called with non-numeric type");
@@ -60,9 +59,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Subtract the given value from this value.
      * @param arg The value to be subtracted
-     * @return The difference as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException if there is a type incompatibility 
-     * between this value and the argument value under subtraction
+     * @return The difference as a new instance of SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under subtraction
      */
     public SMPLValue<?> sub(SMPLValue<?> arg) throws RuntimeException {
         throw new SMPLTypeException("Operation sub called with non-numeric type");
@@ -71,9 +69,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Multiply the given value by this value.
      * @param arg The multiplicand
-     * @return The product as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException if there is a type incompatibility 
-     * between this value and the argument value under multiplication
+     * @return The product as a new instance of SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under multiplication
      */
     public SMPLValue<?> mul(SMPLValue<?> arg) throws RuntimeException {
         throw new SMPLTypeException("Operation mul called with non-numeric type");
@@ -82,9 +79,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Divide the given value by this value.
      * @param arg The divisor
-     * @return The quotient as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException if there is a type incompatibility 
-     * between this value and the argument value under division
+     * @return The quotient as a new instance of SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> div(SMPLValue<?> arg) throws RuntimeException {
         throw new SMPLTypeException("Operation div called with non-numeric type");
@@ -93,18 +89,37 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Compute the remainder of dividing this value by the given value.
      * @param arg The divisor
-     * @return The residue modulo arg as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException if there is a type incompatibility 
-     * between this value and the argument value under division
+     * @return The residue modulo arg as a new instance of SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> mod(SMPLValue<?> arg) throws RuntimeException {
         throw new SMPLTypeException("Operation mod called with non-numeric type");
     }
 
     /**
+     * Compute the remainder of dividing this value by the given value.
+     * @param arg The exponent
+     * @return The result of exponentiation as a new instance of SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> pow(SMPLValue<?> arg) throws RuntimeException {
+        throw new SMPLTypeException("Operation mod called with non-numeric type");
+    }
+
+    /**
+     * Compute the remainder of dividing this value by the given value.
+     * @param arg The sign of the unary expression
+     * @return The signed SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> unary(String arg) throws RuntimeException {
+        throw new SMPLTypeException("Operation mod called with non-numeric type");
+    }
+
+    /**
      *
-     * @return The integer value wrapped in this FnPlot value
-     * @throws TypeFnPlotException If there is no such integer
+     * @return The integer value wrapped in this SMPL value
+     * @throws SMPLTypeException If there is no such integer
      */
     public int intValue() throws SMPLTypeException {
         throw new SMPLTypeException(SMPLType.INTEGER, getType());
@@ -112,8 +127,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
 
     /**
      *
-     * @return The real value wrapped in this FnPlot value
-     * @throws TypeFnPlotException if there is no such real value.
+     * @return The real value wrapped in this SMPL value
+     * @throws SMPLTypeException if there is no such real value.
      */
     public double doubleValue() throws SMPLTypeException {
         throw new SMPLTypeException(SMPLType.REAL, getType());

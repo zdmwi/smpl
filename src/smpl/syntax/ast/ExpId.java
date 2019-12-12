@@ -6,23 +6,23 @@ import smpl.syntax.ast.core.Exp;
 
 import smpl.semantics.Visitor;
 
-public class ExpVar extends Exp {
+public class ExpId extends Exp {
 
-    String var;
+    String id;
 
-    public ExpVar(String id) {
-	    var = id;
+    public ExpId(String st) {
+	    id = st;
     }
 
-    public String getVar() {
-	    return var;
+    public String getId() {
+	    return id;
     }
 
     public <S, T> T visit(Visitor<S, T> v, S arg) throws VisitException {
-	    return v.visitExpVar(this, arg);
+	    return v.visitExpId(this, arg);
     }
 
     public String toString() {
-	    return var;
+	    return id;
     }
 }

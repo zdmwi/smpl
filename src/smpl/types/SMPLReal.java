@@ -77,8 +77,28 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
         }
     }
 
+    /**
+     * Compute the remainder of dividing this value by the given value.
+     * @param arg The exponent
+     * @return The result of exponentiation as a new instance of SMPLReal
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     */
     public SMPLReal pow(SMPLValue<?> arg) throws RuntimeException {
-        return make(Math.pow(value, arg.doubleValue()));
+        return make(Math.pow((double) value, arg.doubleValue()));
+    }
+
+    /**
+     * Compute the remainder of dividing this value by the given value.
+     * @param arg The sign of the unary expression
+     * @return The signed SMPLValue
+     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLReal unary(String arg) throws RuntimeException {
+        // casting the value to a double here is important to prevent loss of information
+        if(arg.equals("+")) {
+            return make(value);
+        }
+        return make(-value);
     }
     
     @Override

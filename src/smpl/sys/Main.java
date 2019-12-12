@@ -22,7 +22,7 @@ import smpl.types.SMPLValue;
 
 public class Main {
 
-    public static final String PROMPT = ">>> ";
+    public static final String PROMPT = ">>>";
 
     private static final String MESSAGE = "SMPL Version 1.0.0 :: " +
                                           "COMP3652 Project 1";
@@ -158,7 +158,7 @@ public class Main {
             System.out.println("Lexing Error: "+ te.getMessage());
         } catch (Exception e) {
             System.out.println("Parse Error: " + e.getMessage());
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 	
         T result = null;	// type should be same as output of interp
@@ -166,7 +166,9 @@ public class Main {
             try {
                 // now walk the AST to evaluate the program.
                 result = walker.walk(ast);
-                System.out.println("\nResult: " + result);
+                if (result != null) {
+                    System.out.println(result);
+                }
             } catch (VisitException e) {
                 System.out.println(e.getMessage());
             }

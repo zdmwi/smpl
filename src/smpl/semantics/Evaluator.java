@@ -14,12 +14,14 @@ import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
 import smpl.syntax.ast.ExpLit;
-import smpl.syntax.ast.ExpVar;
+import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpSub;
 import smpl.syntax.ast.ExpMul;
+import smpl.syntax.ast.ExpPow;
 import smpl.syntax.ast.ExpDiv;
 import smpl.syntax.ast.ExpMod;
+import smpl.syntax.ast.ExpUnary;
 
 public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?>> {
     /* For this visitor, the argument passed to all visit
@@ -112,13 +114,32 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return val1.mod(val2);
     }
 
+    public SMPLValue<?> visitExpPow(ExpPow exp,
+        Environment<SMPLValue<?>> env) throws VisitException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.pow(val2);
+    }
+
+    public SMPLValue<?> visitExpUnary(ExpUnary exp,
+        Environment<SMPLValue<?>> env) throws VisitException {
+        SMPLValue<?> val;
+        String sign;
+
+        val = exp.getExp().visit(this, env);
+        sign = exp.getSign();
+        return val.unary(sign);
+    }
+
     public SMPLValue<?> visitExpLit(ExpLit exp, 
         Environment<SMPLValue<?>> env) throws VisitException {
 	    return exp.getVal();
     }
 
-    public SMPLValue<?> visitExpVar(ExpVar exp, 
+    public SMPLValue<?> visitExpId(ExpId exp, 
         Environment<SMPLValue<?>> env) throws VisitException {
-        return env.get(exp.getVar());
+        return env.get(exp.getId());
     }
 }

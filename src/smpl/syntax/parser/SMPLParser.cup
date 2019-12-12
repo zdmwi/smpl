@@ -4,11 +4,15 @@ import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
 
+import smpl.exceptions.SMPLSyntaxException;
+
 import smpl.syntax.lexer.SMPLLexer;
 
 import smpl.syntax.ast.core.Exp;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.*;
+
+import smpl.types.SMPLValue;
 
 /* Preliminaries to set up and use the scanner.  */
 parser code {:
@@ -40,26 +44,26 @@ scan with {:
 		try {
 		    return lexer.next_token();
 		} catch (java.io.IOException ioe) {
-		    System.out.println("Line " + lexer.getLine() + ", pos " +
-				       lexer.getChar() +
-				       ": Unrecognised token");
-		    System.out.println(ioe.getMessage());
-		    throw ioe;
+		    String msg = "Line " + lexer.getLine() + ", pos " +
+				       lexer.getColumn() +
+				       ": Unrecognised token <" +
+                       lexer.getText() + ">";
+		    throw new SMPLSyntaxException(msg, ioe);
 		}
 	  :};
 
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal LPAREN, RPAREN;
+terminal LPAREN, RPAREN, SEMI;
 
 // arithmetic operators
-terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN;
+terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN, POW;
 
 // terminals with values
 terminal Integer INT;
 terminal Double REAL;
-terminal String VAR;
+terminal String ID;
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -67,8 +71,12 @@ non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtDefinition definition;
 non terminal Exp expression;
+non terminal Exp arithExp;
 non terminal Exp term;
 non terminal Exp factor;
+non terminal Exp unary;
+non terminal Exp primary;
+non terminal SMPLValue<?> literal;
 non terminal empty;
 
 /* Grammar rules */
@@ -76,37 +84,48 @@ non terminal empty;
 program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:lst stmt:s {:
-		lst.add(s); 
-		RESULT = lst;
-		:} |
-	     stmt:s {:
-		RESULT = new StmtSequence(s);
-		:};
+                lst.add(s); 
+                RESULT = lst;
+		     :} |
+	         stmt:s {:
+		        RESULT = new StmtSequence(s);
+		     :};
 
 stmt ::= definition:d {: RESULT = d; :} |
-	     expression:e {: RESULT = new Statement(e); :};
+	     expression:e SEMI {: RESULT = new Statement(e); :};
 
-definition ::= VAR:v ASSIGN expression:e {:
-		            RESULT = new StmtDefinition(v, e); 
-                :};
+definition ::= ID:id ASSIGN expression:e SEMI {:
+		            RESULT = new StmtDefinition(id, e); :};
 
-expression ::= expression:e PLUS term:t {:
-			        RESULT = new ExpAdd(e, t); :} |
-		        expression:e MINUS term:t {:
-			        RESULT = new ExpSub(e, t); :} |
-		        term:t {: RESULT = t; :};
+expression ::= arithExp:a {: RESULT = a; :};
+
+arithExp ::= arithExp:e PLUS term:t {:
+                RESULT = new ExpAdd(e, t); :} |
+             arithExp:e MINUS term:t {:
+                RESULT = new ExpSub(e, t); :} |
+		     term:t {: RESULT = t; :};
 
 term ::= term:t MUL factor:f {:
-		RESULT = new ExpMul(t, f); :} |
-	 term:t DIV factor:f {:
-		RESULT = new ExpDiv(t, f); :} |
-	 term:t MOD factor:f {:
-		RESULT = new ExpMod(t, f); :} |
-	 factor:f {: RESULT = f; :};
+		    RESULT = new ExpMul(t, f); :} |
+	     term:t DIV factor:f {:
+		    RESULT = new ExpDiv(t, f); :} |
+	     term:t MOD factor:f {:
+		    RESULT = new ExpMod(t, f); :} |
+	     factor:f {: RESULT = f; :};
 
-factor ::= INT:ilit {: RESULT = new ExpLit(ilit); :} |
-           REAL:rlit {: RESULT = new ExpLit(rlit); :} |
-	       VAR:var {: RESULT = new ExpVar(var); :} |
-	       LPAREN expression:e RPAREN {: RESULT = e; :};
+factor ::= unary:u POW factor:f {:
+            RESULT = new ExpPow(u, f); :} |
+           unary:u {: RESULT = u; :};
+
+unary ::= PLUS unary:u {: RESULT = new ExpUnary("+", u); :} |
+          MINUS unary:u {: RESULT = new ExpUnary("-", u); :} |
+          primary:p {: RESULT = p; :};
+
+primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
+	        ID:id {: RESULT = new ExpId(id); :} |
+	        LPAREN expression:e RPAREN {: RESULT = e; :};
+
+literal ::= REAL:rlit {: RESULT = SMPLValue.make(rlit); :} |
+            INT:ilit {: RESULT = SMPLValue.make(ilit); :};
 
 empty ::= ;
