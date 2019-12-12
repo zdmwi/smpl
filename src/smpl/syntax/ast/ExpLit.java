@@ -2,19 +2,27 @@ package smpl.syntax.ast;
 
 import smpl.exceptions.VisitException;
 
-import smpl.syntax.ast.core.Exp;
-
 import smpl.semantics.Visitor;
 
+import smpl.syntax.ast.core.Exp;
+import smpl.types.SMPLValue;
+
 public class ExpLit extends Exp {
+    SMPLValue<?> val;
 
-    int val;
-
-    public ExpLit(Integer v) {
-	    val = v.intValue();
+    public ExpLit(SMPLValue<?> v) {
+	    val = v;
     }
 
-    public int getVal() {
+    public ExpLit(Integer v) {
+        val = SMPLValue.make(v);
+    }
+
+    public ExpLit(Double v) {
+        val = SMPLValue.make(v);
+    }
+
+    public SMPLValue<?> getVal() {
 	    return val;
     }
 
@@ -23,7 +31,7 @@ public class ExpLit extends Exp {
     }
 
     public String toString() {
-	    return Integer.toString(val);
+	    return val.toString();
     }
 }
 

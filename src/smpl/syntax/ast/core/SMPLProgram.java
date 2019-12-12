@@ -6,10 +6,10 @@ import smpl.semantics.Visitor;
 
 import smpl.syntax.ast.StmtSequence;
 
-public class ArithProgram extends Exp {
+public class SMPLProgram extends Exp {
     StmtSequence seq;
 
-    public ArithProgram(StmtSequence s) {
+    public SMPLProgram(StmtSequence s) {
 	seq = s;
     }
 
@@ -18,7 +18,7 @@ public class ArithProgram extends Exp {
     }
 
     public <S, T> T visit(Visitor<S, T> v, S arg) throws VisitException {
-	return v.visitArithProgram(this, arg);
+	return v.visitSMPLProgram(this, arg);
     }
 
     public String toString() {

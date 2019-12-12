@@ -13,8 +13,9 @@ public class sym {
   public static final int MOD = 8;
   public static final int EOF = 0;
   public static final int PLUS = 4;
-  public static final int VAR = 11;
+  public static final int VAR = 12;
   public static final int DIV = 7;
+  public static final int REAL = 11;
   public static final int ASSIGN = 9;
   public static final int error = 1;
   public static final int RPAREN = 3;
@@ -32,6 +33,7 @@ public class sym {
   "MOD",
   "ASSIGN",
   "INT",
+  "REAL",
   "VAR"
   };
 }

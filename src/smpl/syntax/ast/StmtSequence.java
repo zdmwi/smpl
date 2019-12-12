@@ -11,7 +11,7 @@ import smpl.semantics.Visitor;
 
 public class StmtSequence extends Exp {
 
-    ArrayList<Exp> seq;		// sequence of commands
+    ArrayList<Statement> seq;		// sequence of commands
 
     public StmtSequence() {
 	    seq = new ArrayList<>();
@@ -22,7 +22,7 @@ public class StmtSequence extends Exp {
         seq.add(s);
     }
 
-    public ArrayList<Exp> getSeq() {
+    public ArrayList<Statement> getSeq() {
 	    return seq;
     }
 
@@ -36,7 +36,7 @@ public class StmtSequence extends Exp {
     }
 
     public String toString() {
-        Iterator<Exp> iter = seq.iterator();
+        Iterator<Statement> iter = seq.iterator();
 
         String result = "";
         while (iter.hasNext()) {

@@ -5,6 +5,8 @@ import java.util.Iterator;
 
 import smpl.exceptions.UnboundVarException;
 
+import smpl.types.SMPLValue;
+
 /**
  * An instance of class <code>Environment</code> maintains a
  * collection of bindings from valid identifiers to integers.
@@ -14,9 +16,9 @@ import smpl.exceptions.UnboundVarException;
  * @author <a href="mailto:dcoore@uwimona.edu.jm">Daniel Coore</a>
  * @version 1.0
  */
-public class Environment {
+public class Environment<T extends SMPLValue<?>> {
 
-    HashMap<String, Integer> dictionary;
+    HashMap<String, T> dictionary;
 
     /**
      * Create a new (empty) top level Environment.
@@ -36,7 +38,7 @@ public class Environment {
      * for the identifiers.  Note that the two arrays must
      * have the same length.
      */
-    public Environment(String[] ids, int[] values) {
+    public Environment(String[] ids, T[] values) {
         dictionary = new HashMap<>();
         for (int i = 0; i < ids.length; i++) {
             put(ids[i], values[i]);
@@ -49,8 +51,8 @@ public class Environment {
      *
      * @return the <code>Environment</code> created.
      */
-    public static Environment makeGlobalEnv() {
-        Environment result =  new Environment();
+    public static <T extends SMPLValue<T>> Environment<T> makeGlobalEnv() {
+        Environment<T> result =  new Environment<>();
         // add definitions for any primitive procedures or
         // constants here
         return result;
@@ -63,8 +65,8 @@ public class Environment {
      * @param id the name to be bound
      * @param value the value to which the name is bound.
      */
-    public void put(String id, int value) {
-	    dictionary.put(id, new Integer(value));
+    public void put(String id, T value) {
+	    dictionary.put(id, value);
     }
 
     /**
@@ -75,12 +77,12 @@ public class Environment {
      * this environment.
      * @exception Exception if <code>id</code> is unbound
      */
-    public int get(String id) throws UnboundVarException {
-        Integer result = (Integer) dictionary.get(id);
+    public T get(String id) throws UnboundVarException {
+        T result = dictionary.get(id);
         if (result == null)
             throw new UnboundVarException(id);
         else
-            return result.intValue();
+            return result;
     }
 
     /**
@@ -94,7 +96,7 @@ public class Environment {
 
         Iterator<String> iter = dictionary.keySet().iterator();
         while (iter.hasNext()) {
-            result = result.append(iter.next().toString());
+            result = result.append(iter.next());
         }
         return result.toString();
     }

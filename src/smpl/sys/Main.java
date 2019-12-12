@@ -11,19 +11,21 @@ import smpl.exceptions.VisitException;
 import smpl.syntax.lexer.SMPLLexer;
 import smpl.syntax.parser.SMPLParser;
 import smpl.syntax.ast.core.Exp;
+import smpl.syntax.ast.core.SMPLProgram;
 
 import smpl.semantics.Environment;
 import smpl.semantics.Visitor;
 import smpl.semantics.Evaluator;
 import smpl.semantics.PersistentWalker;
 
+import smpl.types.SMPLValue;
+
 public class Main {
 
-    public static final String PROMPT = "> ";
+    public static final String PROMPT = ">>> ";
 
-    private static final String MESSAGE = "Type your input at the prompt." +
-	"  Terminate with a '.' on a line by itself.\n" +
-	"Quit by entering a '.' as the only line or by sending EOF to input.";
+    private static final String MESSAGE = "SMPL Version 1.0.0 :: " +
+                                          "COMP3652 Project 1";
 
     public static void usage() {
         String[] usageMsg = new String[]{
@@ -42,7 +44,6 @@ public class Main {
     }
 
     public static <S, T> void main(String args[]) {
-        Environment genv = Environment.makeGlobalEnv();
         int n = args.length;
         String walkerName = "";
         ArrayList<String> filenames = new ArrayList<>();
@@ -65,7 +66,7 @@ public class Main {
         try {
             PersistentWalker<?, ?> walker;	// to be set by switch statement
             if (walkerName.equals("")) {
-                walker = new PersistentWalker<Environment, Integer>
+                walker = new PersistentWalker<Environment<SMPLValue<?>>, SMPLValue<?>>
                     (new Evaluator());
             } else {
                 Class<? extends Visitor<S, T>> wclass =
@@ -105,32 +106,6 @@ public class Main {
             System.err.println(iae.getMessage());
             System.exit(1);
         }
-        // if (args.length == 0) {
-        //     System.out.println(MESSAGE);
-        //     readLines(new InputStreamReader(System.in), genv);	    
-        // } else {
-        //     for (String fname : args) {
-        // 	Reader fr = null;
-        // 	try {
-        // 	    if (fname.equals("-")) {
-        // 		fr = new InputStreamReader(System.in);
-        // 		System.out.println(MESSAGE);
-        // 	    } else {
-        // 		fr = new FileReader(fname);
-        // 		System.out.println("Processing " + fname + "...");
-        // 	    }
-        // 	    readLines(fr, walker);
-        // 	} catch (FileNotFoundException fnfe) {
-        // 	    System.err.println(fnfe.getMessage());
-        // 	} finally {
-        // 	    try { 
-        // 		fr.close();
-        // 	    } catch (IOException ioe) {
-        // 		System.err.println(ioe.getMessage());
-        // 	    }
-        // 	}
-        //    }
-        //  }
     }
 
     public static <S, T> void readLines(Reader in, 
@@ -178,7 +153,7 @@ public class Main {
         try {
             parser = new SMPLParser(new SMPLLexer(reader));
             // now parse the input to produce an AST for the program
-            ast = (Exp) parser.parse().value;
+            ast = (SMPLProgram) parser.parse().value;
         } catch (TokenException te) {
             System.out.println("Lexing Error: "+ te.getMessage());
         } catch (Exception e) {

@@ -7,7 +7,7 @@ import java.util.*;
 import smpl.syntax.lexer.SMPLLexer;
 
 import smpl.syntax.ast.core.Exp;
-import smpl.syntax.ast.core.ArithProgram;
+import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.*;
 
 /* Preliminaries to set up and use the scanner.  */
@@ -58,10 +58,11 @@ terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN;
 
 // terminals with values
 terminal Integer INT;
+terminal Double REAL;
 terminal String VAR;
 
 /* Non terminals */
-non terminal ArithProgram program;
+non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtDefinition definition;
@@ -72,7 +73,7 @@ non terminal empty;
 
 /* Grammar rules */
 
-program ::= stmtList:s {: RESULT = new ArithProgram(s); :};
+program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:lst stmt:s {:
 		lst.add(s); 
@@ -83,17 +84,17 @@ stmtList ::= stmtList:lst stmt:s {:
 		:};
 
 stmt ::= definition:d {: RESULT = d; :} |
-	 expression:e {: RESULT = new Statement(e); :};
+	     expression:e {: RESULT = new Statement(e); :};
 
 definition ::= VAR:v ASSIGN expression:e {:
-		   RESULT = new StmtDefinition(v, e);
-		:};
+		            RESULT = new StmtDefinition(v, e); 
+                :};
 
-expression ::= 	expression:e PLUS term:t {:
-			RESULT = new ExpAdd(e, t); :} |
-		expression:e MINUS term:t {:
-			RESULT = new ExpSub(e, t); :} |
-		term:t {: RESULT = t; :};
+expression ::= expression:e PLUS term:t {:
+			        RESULT = new ExpAdd(e, t); :} |
+		        expression:e MINUS term:t {:
+			        RESULT = new ExpSub(e, t); :} |
+		        term:t {: RESULT = t; :};
 
 term ::= term:t MUL factor:f {:
 		RESULT = new ExpMul(t, f); :} |
@@ -104,7 +105,8 @@ term ::= term:t MUL factor:f {:
 	 factor:f {: RESULT = f; :};
 
 factor ::= INT:ilit {: RESULT = new ExpLit(ilit); :} |
-	   VAR:var {: RESULT = new ExpVar(var); :} |
-	   LPAREN expression:e RPAREN {: RESULT = e; :}	;
+           REAL:rlit {: RESULT = new ExpLit(rlit); :} |
+	       VAR:var {: RESULT = new ExpVar(var); :} |
+	       LPAREN expression:e RPAREN {: RESULT = e; :};
 
 empty ::= ;

@@ -21,17 +21,13 @@ Specific changes:
   PersistentWalker wrapped around a visitor of a class specified on
   the command line
 
-- There are two known visitor classes at this time: Evaluator and
-  ToScheme.
+- There is only one visitor class at this time: Evaluator.
   
 Example Usages:
 - To use as a Repl for a standard interpretor (expression evaluator):
   > $(JAVA_EXEC) Main -w Evaluator -
   OR more simply:
   > $(JAVA_EXEC) Main -
-
-- To use as a converter to Scheme (prefix notation for expressions):
-  > $(JAVA_EXEC) Main -w ToScheme -
 
 - To evaluate a file of expressions called foo.txt:
   > $(JAVA_EXEC) Main -w Evaluator foo.txt
