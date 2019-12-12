@@ -2,7 +2,7 @@ package smpl.syntax.ast.core;
 
 import smpl.semantics.Visitor;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 public abstract class ASTNode {
 
@@ -12,7 +12,7 @@ public abstract class ASTNode {
      * call to its associated method in the visitor.
      */
     public abstract <S, T> T visit(Visitor<S, T> v, S arg)
-	throws VisitException ;
+	throws SMPLException ;
 
     /** Return a string representation of this node and its subtree.
      * The returned string should bear some resemblance to the user's

@@ -1,6 +1,8 @@
 package smpl.exceptions;
 
-public class VisitException extends Exception {
+public class VisitException extends SMPLException {
+
+    private static final long serialVersionUID = 1L;
 
     public VisitException(String message) {
 	    super(message);

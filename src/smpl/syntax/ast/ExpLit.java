@@ -1,6 +1,6 @@
 package smpl.syntax.ast;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.semantics.Visitor;
 
@@ -22,11 +22,15 @@ public class ExpLit extends Exp {
         val = SMPLValue.make(v);
     }
 
+    public ExpLit(String v) {
+        val = SMPLValue.make(v);
+    }
+
     public SMPLValue<?> getVal() {
 	    return val;
     }
 
-    public <S, T> T visit(Visitor<S, T> v, S arg) throws VisitException {
+    public <S, T> T visit(Visitor<S, T> v, S arg) throws SMPLException {
 	    return v.visitExpLit(this, arg);
     }
 

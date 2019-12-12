@@ -5,6 +5,8 @@ package smpl.exceptions;
  */
 public class UnboundVarException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public UnboundVarException(String id) {
 	    super("Unbound variable " + id);
     }

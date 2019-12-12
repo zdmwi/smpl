@@ -1,6 +1,6 @@
 package smpl.syntax.ast.core;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.semantics.Visitor;
 
@@ -17,7 +17,7 @@ public class SMPLProgram extends Exp {
 	return seq;
     }
 
-    public <S, T> T visit(Visitor<S, T> v, S arg) throws VisitException {
+    public <S, T> T visit(Visitor<S, T> v, S arg) throws SMPLException {
 	return v.visitSMPLProgram(this, arg);
     }
 

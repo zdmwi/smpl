@@ -1,6 +1,6 @@
 package smpl.semantics;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
@@ -27,21 +27,21 @@ public interface Visitor<S, T> {
     public S getDefaultState();
 
     // program
-    public T visitSMPLProgram(SMPLProgram p, S arg) throws VisitException;
+    public T visitSMPLProgram(SMPLProgram p, S arg) throws SMPLException;
 
     // statements
-    public T visitStatement(Statement exp, S arg) throws VisitException ;
-    public T visitStmtSequence(StmtSequence exp, S arg) throws VisitException ;
-    public T visitStmtDefinition(StmtDefinition sd, S arg) throws VisitException;
+    public T visitStatement(Statement exp, S arg) throws SMPLException ;
+    public T visitStmtSequence(StmtSequence exp, S arg) throws SMPLException ;
+    public T visitStmtDefinition(StmtDefinition sd, S arg) throws SMPLException;
 
     // expressions
-    public T visitExpAdd(ExpAdd exp, S arg) throws VisitException ;
-    public T visitExpSub(ExpSub exp, S arg) throws VisitException;
-    public T visitExpMul(ExpMul exp, S arg) throws VisitException;
-    public T visitExpDiv(ExpDiv exp, S arg) throws VisitException;
-    public T visitExpMod(ExpMod exp, S arg) throws VisitException;
-    public T visitExpPow(ExpPow exp, S arg) throws VisitException;
-    public T visitExpUnary(ExpUnary exp, S arg) throws VisitException;
-    public T visitExpLit(ExpLit exp, S arg) throws VisitException;
-    public T visitExpId(ExpId exp, S arg) throws VisitException;
+    public T visitExpAdd(ExpAdd exp, S arg) throws SMPLException ;
+    public T visitExpSub(ExpSub exp, S arg) throws SMPLException;
+    public T visitExpMul(ExpMul exp, S arg) throws SMPLException;
+    public T visitExpDiv(ExpDiv exp, S arg) throws SMPLException;
+    public T visitExpMod(ExpMod exp, S arg) throws SMPLException;
+    public T visitExpPow(ExpPow exp, S arg) throws SMPLException;
+    public T visitExpUnary(ExpUnary exp, S arg) throws SMPLException;
+    public T visitExpLit(ExpLit exp, S arg) throws SMPLException;
+    public T visitExpId(ExpId exp, S arg) throws SMPLException;
 }

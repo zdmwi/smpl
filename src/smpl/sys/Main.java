@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 import smpl.exceptions.TokenException;
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.syntax.lexer.SMPLLexer;
 import smpl.syntax.parser.SMPLParser;
@@ -158,7 +158,7 @@ public class Main {
             System.out.println("Lexing Error: "+ te.getMessage());
         } catch (Exception e) {
             System.out.println("Parse Error: " + e.getMessage());
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 	
         T result = null;	// type should be same as output of interp
@@ -169,7 +169,7 @@ public class Main {
                 if (result != null) {
                     System.out.println(result);
                 }
-            } catch (VisitException e) {
+            } catch (SMPLException e) {
                 System.out.println(e.getMessage());
             }
         }

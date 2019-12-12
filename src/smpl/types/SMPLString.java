@@ -1,29 +1,30 @@
 package smpl.types;
 
 import smpl.exceptions.SMPLException;
+import smpl.exceptions.SMPLTypeException;
 
-/**
- *
- * @author zdmwi,
- */
-public class SMPLInt extends SMPLValue<SMPLInt> {
+public class SMPLString extends SMPLValue<SMPLString> {
     
-    int value;
+    String value;
 
-    public SMPLInt() {
-        this(0);
+    public SMPLString() {
+        this("");
     }
 
-    public SMPLInt(Integer v) {
+    public SMPLString(String v) {
         value = v;
     }
     
     public SMPLType getType() {
-        return SMPLType.INT;
+        return SMPLType.STRING;
     }
     
-    public SMPLInt add(SMPLValue<?> arg) throws SMPLException {
-        return make(value + arg.intValue());
+    public SMPLString add(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() == SMPLType.STRING) {
+            return make(value + arg);
+        }
+        String msg = String.format("unsupported operand type(s) for +: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -32,8 +33,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt sub(SMPLValue<?> arg) throws SMPLException {
-        return make(value - arg.intValue());
+    public SMPLString sub(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for -: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -43,7 +45,8 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @throws smpl.exceptions.SMPLException
      */
     public SMPLInt mul(SMPLValue<?> arg) throws SMPLException {
-        return make(value * arg.intValue());
+        String msg = String.format("unsupported operand type(s) for *: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -53,7 +56,8 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @throws smpl.exceptions.SMPLException
      */
     public SMPLInt div(SMPLValue<?> arg) throws SMPLException {
-        return make(value / arg.intValue());
+        String msg = String.format("unsupported operand type(s) for /: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -63,7 +67,8 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @throws smpl.exceptions.SMPLException
      */
     public SMPLInt mod(SMPLValue<?> arg) throws SMPLException {
-        return make(value % arg.intValue());
+        String msg = String.format("unsupported operand type(s) for %: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -73,8 +78,8 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLReal pow(SMPLValue<?> arg) throws SMPLException {
-        // casting the value to a double here is important to prevent loss of information
-        return make(Math.pow((double) value, arg.doubleValue()));
+        String msg = String.format("unsupported operand type(s) for ^: 'STRING' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -83,23 +88,16 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLInt unary(String arg) throws SMPLException {
-        // casting the value to a double here is important to prevent loss of information
-        if(arg.equals("+")) {
-            return make(value);
-        }
-        return make(-value);
+    public SMPLString unary(String arg) throws SMPLException {
+        String msg = String.format("unsupported operand type for %s: 'STRING'", arg);
+        throw new SMPLTypeException(msg);
     }
     
-    public int intValue() {
-        return value;
-    }
-
-    public double doubleValue() {
+    public String stringValue() {
         return value;
     }
 
     public String toString() {
-        return String.valueOf(value);
+        return value;
     }
 }

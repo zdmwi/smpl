@@ -1,12 +1,8 @@
 package smpl.types;
 
-import smpl.exceptions.RuntimeException;
+import smpl.exceptions.SMPLException;
 
-/**
- *
- * @author newts
- * Created on 14-Oct-2016
- */
+
 public class SMPLReal extends SMPLValue<SMPLReal> {
     
     double value;
@@ -21,11 +17,11 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
     
     @Override
     public SMPLType getType() {
-        return SMPLType.REAL;
+        return SMPLType.DOUBLE;
     }
     
     @Override
-    public SMPLReal add(SMPLValue<?> arg) throws RuntimeException {
+    public SMPLReal add(SMPLValue<?> arg) throws SMPLException {
         return make(value + arg.doubleValue());
     }
 
@@ -36,7 +32,7 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * @throws fnplot.sys.FnPlotException
      */
     @Override
-    public SMPLReal sub(SMPLValue<?> arg) throws RuntimeException {
+    public SMPLReal sub(SMPLValue<?> arg) throws SMPLException {
         return make(value - arg.doubleValue());
     }
 
@@ -47,7 +43,7 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * @throws fnplot.sys.FnPlotException
      */
     @Override
-    public SMPLReal mul(SMPLValue<?> arg) throws RuntimeException {
+    public SMPLReal mul(SMPLValue<?> arg) throws SMPLException {
         return make(value * arg.doubleValue());
     }
 
@@ -58,7 +54,7 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * @throws fnplot.sys.FnPlotException
      */
     @Override
-    public SMPLReal div(SMPLValue<?> arg) throws RuntimeException {
+    public SMPLReal div(SMPLValue<?> arg) throws SMPLException {
         return make(value / arg.doubleValue());
     }
 
@@ -69,8 +65,8 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * @throws fnplot.values.TypeFnPlotException
      */
     @Override
-    public SMPLReal mod(SMPLValue<?> arg) throws RuntimeException {
-        if (arg.isInteger()) {
+    public SMPLReal mod(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() == SMPLType.INT) {
             return make(value % arg.intValue());
         } else {
             return make(value % arg.doubleValue());
@@ -81,9 +77,9 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * Compute the remainder of dividing this value by the given value.
      * @param arg The exponent
      * @return The result of exponentiation as a new instance of SMPLReal
-     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLReal pow(SMPLValue<?> arg) throws RuntimeException {
+    public SMPLReal pow(SMPLValue<?> arg) throws SMPLException {
         return make(Math.pow((double) value, arg.doubleValue()));
     }
 
@@ -91,9 +87,9 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * Compute the remainder of dividing this value by the given value.
      * @param arg The sign of the unary expression
      * @return The signed SMPLValue
-     * @throws smpl.exception.RuntimeException if there is a type incompatibility between this value and the argument value under division
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLReal unary(String arg) throws RuntimeException {
+    public SMPLReal unary(String arg) throws SMPLException {
         // casting the value to a double here is important to prevent loss of information
         if(arg.equals("+")) {
             return make(value);

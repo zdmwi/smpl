@@ -6,6 +6,8 @@ package smpl.exceptions;
  */
 public class RuntimeException extends VisitException {
 
+    private static final long serialVersionUID = 1L;
+
     public RuntimeException(String msg) {
 	    super(msg);
     }

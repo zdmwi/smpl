@@ -6,7 +6,7 @@ import smpl.types.SMPLType;
  *
  * @author zdmwi,
  */
-public class SMPLTypeException extends RuntimeException {
+public class SMPLTypeException extends SMPLException {
 
     private static final long serialVersionUID = 1L;
 

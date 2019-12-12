@@ -61,9 +61,10 @@ terminal LPAREN, RPAREN, SEMI;
 terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN, POW;
 
 // terminals with values
-terminal Integer INT;
-terminal Double REAL;
 terminal String ID;
+terminal Integer INT;
+terminal Double DOUBLE;
+terminal String STRING;
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -125,7 +126,8 @@ primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
 	        ID:id {: RESULT = new ExpId(id); :} |
 	        LPAREN expression:e RPAREN {: RESULT = e; :};
 
-literal ::= REAL:rlit {: RESULT = SMPLValue.make(rlit); :} |
-            INT:ilit {: RESULT = SMPLValue.make(ilit); :};
+literal ::= INT:ilit {: RESULT = SMPLValue.make(ilit); :} |
+            DOUBLE:dlit {: RESULT = SMPLValue.make(dlit); :} |
+            STRING:slit {: RESULT = SMPLValue.make(slit); :};
 
 empty ::= ;

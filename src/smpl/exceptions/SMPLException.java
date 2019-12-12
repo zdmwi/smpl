@@ -5,7 +5,7 @@ public class SMPLException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public SMPLException() {
-        super("FnPlot Error");
+        super("SMPL Error");
     }
     
     public SMPLException(String msg) {

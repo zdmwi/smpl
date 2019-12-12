@@ -1,6 +1,6 @@
 package smpl.semantics;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.syntax.ast.core.ASTNode;
 /**
@@ -30,7 +30,7 @@ public class PersistentWalker<S, T> {
     /** Traverse the given expression (AST) using the visitor with its 
 	associated state. 
     */
-    public T walk(ASTNode expr) throws VisitException {
+    public T walk(ASTNode expr) throws SMPLException {
 	    return expr.visit(visitor, state);
     }
 }

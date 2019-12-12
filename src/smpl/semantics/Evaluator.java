@@ -3,7 +3,7 @@ package smpl.semantics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.semantics.Environment;
 
@@ -41,23 +41,23 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
 	    return Environment.makeGlobalEnv();
     }
 
-    public SMPLValue<?> visitSMPLProgram(SMPLProgram p, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitSMPLProgram(final SMPLProgram p, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         result = p.getSeq().visit(this, env);
         return result;
     }
 
-    public SMPLValue<?> visitStatement(Statement s, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitStatement(final Statement s, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
 	    return s.getExp().visit(this, env);
     }
 
-    public SMPLValue<?> visitStmtSequence(StmtSequence sseq, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitStmtSequence(final StmtSequence sseq, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         // remember that arg is the environment
         Statement s;
-        ArrayList<Statement> seq = sseq.getSeq();
-        Iterator<Statement> iter = seq.iterator();
+        final ArrayList<Statement> seq = sseq.getSeq();
+        final Iterator<Statement> iter = seq.iterator();
         result = SMPLValue.make(0); // default result
         while(iter.hasNext()) {
             s = (Statement) iter.next();
@@ -67,55 +67,55 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return result;
     }
 
-    public SMPLValue<?> visitStmtDefinition(StmtDefinition sd, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitStmtDefinition(final StmtDefinition sd, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         result = sd.getExp().visit(this, env);
         env.put(sd.getVar(), result);
         return result;
     }
 
-    public SMPLValue<?> visitExpAdd(ExpAdd exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpAdd(final ExpAdd exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.add(val2);
     }
 
-    public SMPLValue<?> visitExpSub(ExpSub exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpSub(final ExpSub exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.sub(val2);
     }
 
-    public SMPLValue<?> visitExpMul(ExpMul exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpMul(final ExpMul exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
 	    SMPLValue<?> val1, val2;
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.mul(val2);
     }
 
-    public SMPLValue<?> visitExpDiv(ExpDiv exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpDiv(final ExpDiv exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.div(val2);
     }
 
-    public SMPLValue<?> visitExpMod(ExpMod exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpMod(final ExpMod exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.mod(val2);
     }
 
-    public SMPLValue<?> visitExpPow(ExpPow exp,
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpPow(final ExpPow exp,
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
 
         val1 = exp.getExpL().visit(this, env);
@@ -123,8 +123,8 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return val1.pow(val2);
     }
 
-    public SMPLValue<?> visitExpUnary(ExpUnary exp,
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpUnary(final ExpUnary exp,
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val;
         String sign;
 
@@ -133,13 +133,13 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return val.unary(sign);
     }
 
-    public SMPLValue<?> visitExpLit(ExpLit exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpLit(final ExpLit exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
 	    return exp.getVal();
     }
 
-    public SMPLValue<?> visitExpId(ExpId exp, 
-        Environment<SMPLValue<?>> env) throws VisitException {
+    public SMPLValue<?> visitExpId(final ExpId exp, 
+        final Environment<SMPLValue<?>> env) throws SMPLException {
         return env.get(exp.getId());
     }
 }

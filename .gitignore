@@ -1,3 +1,4 @@
 bin
 *.bat
 *.sh
+.classpath

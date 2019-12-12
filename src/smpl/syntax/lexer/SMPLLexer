@@ -33,6 +33,8 @@ import smpl.syntax.parser.sym;
 %line
 
 %{
+    StringBuffer string = new StringBuffer();
+
     public int getChar() {
 	    return yychar + 1;
     }
@@ -59,6 +61,8 @@ ws = {cc}|[\t ]
 alpha = [a-zA-Z_]
 
 alphanum = {alpha}|[0-9]
+
+%state STRING
 
 %%
 
@@ -89,17 +93,31 @@ alphanum = {alpha}|[0-9]
 }
 
 <YYINITIAL> [0-9]*\.[0-9]+ {
-    // REAL
-    return new Symbol(sym.REAL,
+    // DOUBLE
+    return new Symbol(sym.DOUBLE,
             new Double(yytext()));
 }
+
+<YYINITIAL> \" { string.setLength(0); yybegin(STRING); }
 
 <YYINITIAL> {alpha}{alphanum}* {
     // IDENTIFIER
     return new Symbol(sym.ID, yytext());
 }
 
-<YYINITIAL> \S+ { 
+<STRING> {
+    \"               { yybegin(YYINITIAL);
+                        return new Symbol(sym.STRING,
+                        string.toString()); }
+
+    [^\n\r\"\\]      { string.append(yytext()); }
+    \\t              { string.append('\t'); }
+    \\n              { string.append('\n'); }
+    \\\"             { string.append('\"'); }
+    \\               { string.append('\\'); }
+}
+
+<YYINITIAL> [^\s\"\'\(\)\[\]\{\}:,]+ { 
     // ensures all tokens without whitespace separating them is caught
     // and dealt with as an error if it doesn't match any of our language
     // rules.

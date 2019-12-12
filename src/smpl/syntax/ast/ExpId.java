@@ -1,6 +1,6 @@
 package smpl.syntax.ast;
 
-import smpl.exceptions.VisitException;
+import smpl.exceptions.SMPLException;
 
 import smpl.syntax.ast.core.Exp;
 
@@ -18,7 +18,7 @@ public class ExpId extends Exp {
 	    return id;
     }
 
-    public <S, T> T visit(Visitor<S, T> v, S arg) throws VisitException {
+    public <S, T> T visit(Visitor<S, T> v, S arg) throws SMPLException {
 	    return v.visitExpId(this, arg);
     }
 
