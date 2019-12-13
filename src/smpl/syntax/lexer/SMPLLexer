@@ -91,9 +91,9 @@ comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
 <YYINITIAL> "^" {return new Symbol(sym.POW);}
 
 /* BITWISE OPERATORS */
-<YYINITIAL> "&" {return new Symbol(sym.AMP);}
-<YYINITIAL> "|" {return new Symbol(sym.PIPE);}
-<YYINITIAL> "~" {return new Symbol(sym.TILDE);}
+<YYINITIAL> "&" {return new Symbol(sym.BAND);}
+<YYINITIAL> "|" {return new Symbol(sym.BOR);}
+<YYINITIAL> "~" {return new Symbol(sym.BNOR);}
 
 /* RELATIONAL OPERATORS */
 <YYINITIAL> "=" {return new Symbol(sym.EQ);}
@@ -126,7 +126,7 @@ comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
 <YYINITIAL> "proc" {return new Symbol(sym.PROC);}
 <YYINITIAL> "call" {return new Symbol(sym.CALL);}
 <YYINITIAL> "print" {return new Symbol(sym.PRINT);}
-<YYINITIAL> "println" {return new Symbol(sym.PRINLN);}
+<YYINITIAL> "println" {return new Symbol(sym.PRINTLN);}
 <YYINITIAL> "read" {return new Symbol(sym.READ);}
 <YYINITIAL> "readint" {return new Symbol(sym.READINT);}
 <YYINITIAL> "if" {return new Symbol(sym.IF);}
