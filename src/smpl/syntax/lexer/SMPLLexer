@@ -135,11 +135,29 @@ identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
         new Boolean(false));
 }
 
-<YYINITIAL> "#c"[^\s] | "#c\\n" | "#c\\t" | "#c\\\\" {
+<YYINITIAL> "#c"[^\s] {
     // CHARACTER
     char val = yycharat(2);
     return new Symbol(sym.CHARACTER, 
         new Character(val));
+}
+
+<YYINITIAL> "#c\\n" {
+    // ESCAPED CHARACTER \n
+    return new Symbol(sym.CHARACTER, 
+        new Character('\n'));
+}
+
+<YYINITIAL> "#c\\t" {
+    // ESCAPED CHARACTER \t
+    return new Symbol(sym.CHARACTER, 
+        new Character('\t'));
+}
+
+<YYINITIAL> "#c\\\\" {
+    // ESCAPED CHARACTER \
+    return new Symbol(sym.CHARACTER, 
+        new Character('\\'));
 }
 
 <YYINITIAL> "#u"{hexadecimal}{hexadecimal}{hexadecimal}{hexadecimal} {

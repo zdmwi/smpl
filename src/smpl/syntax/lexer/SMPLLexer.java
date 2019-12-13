@@ -69,10 +69,10 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
     "\1\1\1\17\1\20\1\21\1\22\2\23\2\1\1\24"+
     "\2\1\1\25\1\26\1\27\1\30\1\31\1\32\1\33"+
-    "\3\34\3\1\1\35";
+    "\3\34\1\1\1\35\1\36\1\37\2\1\1\40";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[45];
+    int [] result = new int[48];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -102,10 +102,10 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
     "\0\300\0\300\0\100\0\340\0\140\0\140\0\140\0\u0100"+
     "\0\100\0\340\0\u0120\0\u0140\0\300\0\u0160\0\u0180\0\300"+
     "\0\340\0\140\0\140\0\140\0\u0120\0\u0140\0\300\0\140"+
-    "\0\u01a0\0\u01c0\0\u01e0\0\u0200\0\300";
+    "\0\u01a0\0\u01c0\0\300\0\300\0\300\0\u01e0\0\u0200\0\300";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[45];
+    int [] result = new int[48];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -149,12 +149,12 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
     "\4\47\1\50\1\11\1\0\1\11\1\0\3\52\14\11"+
     "\2\52\1\11\1\0\2\52\1\0\1\11\4\52\1\0"+
     "\1\11\1\0\1\11\1\0\22\11\1\0\2\11\1\0"+
-    "\3\47\2\11\1\0\1\11\1\0\1\11\1\0\3\53"+
-    "\14\11\2\53\1\11\1\0\2\53\1\0\1\11\4\53"+
-    "\1\0\1\11\1\0\1\11\1\0\3\54\14\11\2\54"+
-    "\1\11\1\0\2\54\1\0\1\11\4\54\1\0\1\11"+
-    "\1\0\1\11\1\0\3\55\14\11\2\55\1\11\1\0"+
-    "\2\55\1\0\1\11\4\55\1\0";
+    "\1\53\1\54\1\55\2\11\1\0\1\11\1\0\1\11"+
+    "\1\0\3\56\14\11\2\56\1\11\1\0\2\56\1\0"+
+    "\1\11\4\56\1\0\1\11\1\0\1\11\1\0\3\57"+
+    "\14\11\2\57\1\11\1\0\2\57\1\0\1\11\4\57"+
+    "\1\0\1\11\1\0\1\11\1\0\3\60\14\11\2\60"+
+    "\1\11\1\0\2\60\1\0\1\11\4\60\1\0";
 
   private static int [] zzUnpackTrans() {
     int [] result = new int[544];
@@ -196,10 +196,10 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\2\0\1\1\1\11\1\1\1\11\16\1\3\11\12\1"+
-    "\3\11\3\1\1\11\5\1";
+    "\3\11\3\1\1\11\10\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[45];
+    int [] result = new int[48];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -676,104 +676,104 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
     throw new TokenException(msg);
             } 
             // fall through
-          case 30: break;
+          case 33: break;
           case 2: 
             { //skip newline, but reset char counter
     yychar = 0;
             } 
             // fall through
-          case 31: break;
+          case 34: break;
           case 3: 
             { /* skip whitespace */
             } 
             // fall through
-          case 32: break;
+          case 35: break;
           case 4: 
             { // INTEGER
     return new Symbol(sym.INT, 
             new Integer(yytext()));
             } 
             // fall through
-          case 33: break;
+          case 36: break;
           case 5: 
             { return new Symbol(sym.PLUS);
             } 
             // fall through
-          case 34: break;
+          case 37: break;
           case 6: 
             { return new Symbol(sym.MINUS);
             } 
             // fall through
-          case 35: break;
+          case 38: break;
           case 7: 
             { return new Symbol(sym.MUL);
             } 
             // fall through
-          case 36: break;
+          case 39: break;
           case 8: 
             { return new Symbol(sym.DIV);
             } 
             // fall through
-          case 37: break;
+          case 40: break;
           case 9: 
             { return new Symbol(sym.MOD);
             } 
             // fall through
-          case 38: break;
+          case 41: break;
           case 10: 
             { return new Symbol(sym.POW);
             } 
             // fall through
-          case 39: break;
+          case 42: break;
           case 11: 
             { return new Symbol(sym.ASSIGN);
             } 
             // fall through
-          case 40: break;
+          case 43: break;
           case 12: 
             { return new Symbol(sym.LPAREN);
             } 
             // fall through
-          case 41: break;
+          case 44: break;
           case 13: 
             { return new Symbol(sym.RPAREN);
             } 
             // fall through
-          case 42: break;
+          case 45: break;
           case 14: 
             { return new Symbol(sym.SEMI);
             } 
             // fall through
-          case 43: break;
+          case 46: break;
           case 15: 
             { // STRING
     string.setLength(0); yybegin(STRING);
             } 
             // fall through
-          case 44: break;
+          case 47: break;
           case 16: 
             { string.append(yytext());
             } 
             // fall through
-          case 45: break;
+          case 48: break;
           case 17: 
             { yybegin(YYINITIAL);
                         return new Symbol(sym.STRING,
                         string.toString());
             } 
             // fall through
-          case 46: break;
+          case 49: break;
           case 18: 
             { string.append('\\');
             } 
             // fall through
-          case 47: break;
+          case 50: break;
           case 19: 
             { // IDENTIFIER
     return new Symbol(sym.ID, yytext());
             } 
             // fall through
-          case 48: break;
+          case 51: break;
           case 20: 
             { // BOOLEAN
     // get the letter after the # sign
@@ -786,34 +786,34 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
         new Boolean(false));
             } 
             // fall through
-          case 49: break;
+          case 52: break;
           case 21: 
             { return new Symbol(sym.NIL);
             } 
             // fall through
-          case 50: break;
+          case 53: break;
           case 22: 
             { // DOUBLE
     return new Symbol(sym.DOUBLE,
             new Double(yytext()));
             } 
             // fall through
-          case 51: break;
+          case 54: break;
           case 23: 
             { string.append('\"');
             } 
             // fall through
-          case 52: break;
+          case 55: break;
           case 24: 
             { string.append('\n');
             } 
             // fall through
-          case 53: break;
+          case 56: break;
           case 25: 
             { string.append('\t');
             } 
             // fall through
-          case 54: break;
+          case 57: break;
           case 26: 
             { // BINARY
     String val = yytext().substring(2);
@@ -821,7 +821,7 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
         Integer.parseInt(val, 2));
             } 
             // fall through
-          case 55: break;
+          case 58: break;
           case 27: 
             { // HEXADECIMAL
     String val = yytext().substring(2);
@@ -829,7 +829,7 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
         Integer.parseInt(val, 16));
             } 
             // fall through
-          case 56: break;
+          case 59: break;
           case 28: 
             { // CHARACTER
     char val = yycharat(2);
@@ -837,8 +837,29 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
         new Character(val));
             } 
             // fall through
-          case 57: break;
+          case 60: break;
           case 29: 
+            { // ESCAPED CHARACTER \
+    return new Symbol(sym.CHARACTER, 
+        new Character('\\'));
+            } 
+            // fall through
+          case 61: break;
+          case 30: 
+            { // ESCAPED CHARACTER \n
+    return new Symbol(sym.CHARACTER, 
+        new Character('\n'));
+            } 
+            // fall through
+          case 62: break;
+          case 31: 
+            { // ESCAPED CHARACTER \t
+    return new Symbol(sym.CHARACTER, 
+        new Character('\t'));
+            } 
+            // fall through
+          case 63: break;
+          case 32: 
             { // UNICODE CHARACTER
     String val = yytext().substring(2);
     int ch = Integer.parseInt(val, 16);
@@ -846,7 +867,7 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
         new Character((char) ch));
             } 
             // fall through
-          case 58: break;
+          case 64: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
