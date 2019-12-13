@@ -1,16 +1,17 @@
 package smpl.types;
 
 import smpl.exceptions.SMPLException;
+import smpl.exceptions.SMPLTypeException;
 
-public class SMPLInt extends SMPLValue<SMPLInt> {
+public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
     
-    int value;
+    char value;
 
-    public SMPLInt() {
-        this(0);
+    public SMPLCharacter() {
+        this('\u0000');
     }
 
-    public SMPLInt(Integer v) {
+    public SMPLCharacter(Character v) {
         value = v;
     }
     
@@ -18,8 +19,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
         return SMPLType.INT;
     }
     
-    public SMPLInt add(SMPLValue<?> arg) throws SMPLException {
-        return make(value + arg.intValue());
+    public SMPLCharacter add(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for +: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -28,8 +30,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt sub(SMPLValue<?> arg) throws SMPLException {
-        return make(value - arg.intValue());
+    public SMPLCharacter sub(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for -: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -38,8 +41,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The product as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt mul(SMPLValue<?> arg) throws SMPLException {
-        return make(value * arg.intValue());
+    public SMPLCharacter mul(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for *: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -48,8 +52,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The quotient as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt div(SMPLValue<?> arg) throws SMPLException {
-        return make(value / arg.intValue());
+    public SMPLCharacter div(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for /: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -58,8 +63,9 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The residue modulo arg as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt mod(SMPLValue<?> arg) throws SMPLException {
-        return make(value % arg.intValue());
+    public SMPLCharacter mod(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for %: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -69,8 +75,8 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
-        // casting the value to a double here is important to prevent loss of information
-        return make(Math.pow((double) value, arg.doubleValue()));
+        String msg = String.format("unsupported operand type(s) for ^: 'BOOLEAN' and '%s'", arg.getType());
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -79,19 +85,12 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLInt unary(String arg) throws SMPLException {
-        // casting the value to a double here is important to prevent loss of information
-        if(arg.equals("+")) {
-            return make(value);
-        }
-        return make(-value);
+    public SMPLCharacter unary(String arg) throws SMPLException {
+        String msg = String.format("unsupported operand type for %s: 'BOOLEAN'", arg);
+        throw new SMPLTypeException(msg);
     }
     
-    public int intValue() {
-        return value;
-    }
-
-    public double doubleValue() {
+    public char charValue() {
         return value;
     }
 

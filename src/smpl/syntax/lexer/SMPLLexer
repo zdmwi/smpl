@@ -115,6 +115,13 @@ alphanum = {alpha}|[0-9]
         new Boolean(false));
 }
 
+<YYINITIAL> "#c"[^\s] {
+    // CHARACTER
+    char value = yycharat(2);
+    return new Symbol(sym.CHARACTER, 
+        new Character(value));
+}
+
 <YYINITIAL> {alpha}{alphanum}* {
     // IDENTIFIER
     return new Symbol(sym.ID, yytext());

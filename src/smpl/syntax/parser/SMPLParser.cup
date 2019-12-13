@@ -75,7 +75,9 @@ terminal String ID;
 terminal Integer INT;
 terminal Double DOUBLE;
 terminal String STRING;
+terminal Character CHARACTER;
 terminal Boolean BOOLEAN;
+
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -140,6 +142,7 @@ primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
 literal ::= INT:ilit {: RESULT = SMPLValue.make(ilit); :} |
             DOUBLE:dlit {: RESULT = SMPLValue.make(dlit); :} |
             STRING:slit {: RESULT = SMPLValue.make(slit); :} |
+            CHARACTER:chlit {: RESULT = SMPLValue.make(chlit); :} |
             BOOLEAN:blit {: RESULT = SMPLValue.make(blit); :};
 
 empty ::= ;

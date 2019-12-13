@@ -30,7 +30,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt sub(SMPLValue<?> arg) throws SMPLException {
+    public SMPLBoolean sub(SMPLValue<?> arg) throws SMPLException {
         String msg = String.format("unsupported operand type(s) for -: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
@@ -41,7 +41,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The product as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt mul(SMPLValue<?> arg) throws SMPLException {
+    public SMPLBoolean mul(SMPLValue<?> arg) throws SMPLException {
         String msg = String.format("unsupported operand type(s) for *: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
@@ -52,7 +52,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The quotient as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt div(SMPLValue<?> arg) throws SMPLException {
+    public SMPLBoolean div(SMPLValue<?> arg) throws SMPLException {
         String msg = String.format("unsupported operand type(s) for /: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
@@ -63,7 +63,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The residue modulo arg as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLInt mod(SMPLValue<?> arg) throws SMPLException {
+    public SMPLBoolean mod(SMPLValue<?> arg) throws SMPLException {
         String msg = String.format("unsupported operand type(s) for %: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
@@ -74,7 +74,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The result of exponentiation as a new instance of SMPLReal
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
+    public SMPLBoolean pow(SMPLValue<?> arg) throws SMPLException {
         String msg = String.format("unsupported operand type(s) for ^: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
@@ -85,7 +85,7 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLInt unary(String arg) throws SMPLException {
+    public SMPLBoolean unary(String arg) throws SMPLException {
         String msg = String.format("unsupported operand type for %s: 'BOOLEAN'", arg);
         throw new SMPLTypeException(msg);
     }
