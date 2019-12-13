@@ -62,6 +62,10 @@ alpha = [a-zA-Z_]
 
 alphanum = {alpha}|[0-9]
 
+binary = [01]
+
+hexadecimal = [a-zA-Z0-9]
+
 %state STRING
 
 %%
@@ -92,14 +96,14 @@ alphanum = {alpha}|[0-9]
             new Integer(yytext()));
 }
 
-<YYINITIAL> "#b"[01]+ {
+<YYINITIAL> "#b"{binary}+ {
     // BINARY
     String val = yytext().substring(2);
     return new Symbol(sym.INT,
         Integer.parseInt(val, 2));
 }
 
-<YYINITIAL> "#x"[a-zA-Z0-9]+ {
+<YYINITIAL> "#x"{hexadecimal}+ {
     // HEXADECIMAL
     String val = yytext().substring(2);
     return new Symbol(sym.INT,
@@ -120,8 +124,8 @@ alphanum = {alpha}|[0-9]
 <YYINITIAL> "#"[tf] {
     // BOOLEAN
     // get the letter after the # sign
-    char value = yycharat(1);
-    if (value == 't') {
+    char val = yycharat(1);
+    if (val == 't') {
         return new Symbol(sym.BOOLEAN,
             new Boolean(true));
     }
@@ -129,11 +133,19 @@ alphanum = {alpha}|[0-9]
         new Boolean(false));
 }
 
-<YYINITIAL> "#c"[^\s] {
+<YYINITIAL> "#c"[^\s] | "#c\\n" | "#c\\t" | "#c\\\\" {
     // CHARACTER
-    char value = yycharat(2);
+    char val = yycharat(2);
     return new Symbol(sym.CHARACTER, 
-        new Character(value));
+        new Character(val));
+}
+
+<YYINITIAL> "#u"{hexadecimal}{hexadecimal}{hexadecimal}{hexadecimal} {
+    // UNICODE CHARACTER
+    String val = yytext().substring(2);
+    int ch = Integer.parseInt(val, 16);
+    return new Symbol(sym.CHARACTER,
+        new Character((char) ch));
 }
 
 <YYINITIAL> {alpha}{alphanum}* {
