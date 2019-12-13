@@ -3,15 +3,15 @@ package smpl.types;
 import smpl.exceptions.SMPLException;
 
 
-public class SMPLReal extends SMPLValue<SMPLReal> {
+public class SMPLDouble extends SMPLValue<SMPLDouble> {
     
     double value;
 
-    public SMPLReal() {
+    public SMPLDouble() {
         this(0D);
     }
 
-    public SMPLReal(Double v) {
+    public SMPLDouble(Double v) {
         value = v;
     }
     
@@ -21,7 +21,7 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
     }
     
     @Override
-    public SMPLReal add(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble add(SMPLValue<?> arg) throws SMPLException {
         return make(value + arg.doubleValue());
     }
 
@@ -29,10 +29,10 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * Subtract the given value from this value.
      * @param arg The value to be subtracted
      * @return The difference as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException
+     * @throws smpl.exception.SMPLException
      */
     @Override
-    public SMPLReal sub(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble sub(SMPLValue<?> arg) throws SMPLException {
         return make(value - arg.doubleValue());
     }
 
@@ -40,10 +40,10 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * Multiply the given value by this value.
      * @param arg The multiplicand
      * @return The product as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException
+     * @throws smpl.exception.SMPLException
      */
     @Override
-    public SMPLReal mul(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble mul(SMPLValue<?> arg) throws SMPLException {
         return make(value * arg.doubleValue());
     }
 
@@ -51,21 +51,21 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * Divide the given value by this value.
      * @param arg The divisor
      * @return The quotient as a new instance of FnPlotValue
-     * @throws fnplot.sys.FnPlotException
+     * @throws smpl.exception.SMPLException
      */
     @Override
-    public SMPLReal div(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble div(SMPLValue<?> arg) throws SMPLException {
         return make(value / arg.doubleValue());
     }
 
     /**
      * Compute the remainder of dividing this value by the given value.
      * @param arg The divisor
-     * @return The residue modulo arg as a new instance of FnPlotValue
-     * @throws fnplot.values.TypeFnPlotException
+     * @return The residue modulo arg as a new instance of SMPLValue
+     * @throws smpl.exception.SMPLException
      */
     @Override
-    public SMPLReal mod(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble mod(SMPLValue<?> arg) throws SMPLException {
         if (arg.getType() == SMPLType.INT) {
             return make(value % arg.intValue());
         } else {
@@ -76,10 +76,10 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
     /**
      * Compute the remainder of dividing this value by the given value.
      * @param arg The exponent
-     * @return The result of exponentiation as a new instance of SMPLReal
+     * @return The result of exponentiation as a new instance of SMPLDouble
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLReal pow(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
         return make(Math.pow((double) value, arg.doubleValue()));
     }
 
@@ -89,8 +89,7 @@ public class SMPLReal extends SMPLValue<SMPLReal> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLReal unary(String arg) throws SMPLException {
-        // casting the value to a double here is important to prevent loss of information
+    public SMPLDouble unary(String arg) throws SMPLException {
         if(arg.equals("+")) {
             return make(value);
         }

@@ -26,6 +26,10 @@ public class ExpLit extends Exp {
         val = SMPLValue.make(v);
     }
 
+    public ExpLit(Boolean v) {
+        val = SMPLValue.make(v);
+    }
+
     public SMPLValue<?> getVal() {
 	    return val;
     }

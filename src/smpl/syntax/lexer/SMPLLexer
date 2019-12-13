@@ -98,7 +98,22 @@ alphanum = {alpha}|[0-9]
             new Double(yytext()));
 }
 
-<YYINITIAL> \" { string.setLength(0); yybegin(STRING); }
+<YYINITIAL> \" { 
+    // STRING
+    string.setLength(0); yybegin(STRING); 
+}
+
+<YYINITIAL> "#"[tf] {
+    // BOOLEAN
+    // get the letter after the # sign
+    char value = yycharat(1);
+    if (value == 't') {
+        return new Symbol(sym.BOOLEAN,
+            new Boolean(true));
+    }
+    return new Symbol(sym.BOOLEAN,
+        new Boolean(false));
+}
 
 <YYINITIAL> {alpha}{alphanum}* {
     // IDENTIFIER
@@ -118,9 +133,10 @@ alphanum = {alpha}|[0-9]
 }
 
 <YYINITIAL> [^\s\"\'\(\)\[\]\{\}:,]+ { 
-    // ensures all tokens without whitespace separating them is caught
-    // and dealt with as an error if it doesn't match any of our language
-    // rules.
+    // ensures all tokens without whitespace separating excluding
+    // quotations, parentheses, brackets, braces, colons and commas are
+    // caught and dealt with as an error if it doesn't match any of our 
+    // language's rules.
     String msg = String.format("Unrecognised Token: %s", yytext());
     throw new TokenException(msg);
 }

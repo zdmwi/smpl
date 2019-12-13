@@ -12,6 +12,7 @@ public class sym {
   public static final int INT = 13;
   public static final int POW = 11;
   public static final int MOD = 9;
+  public static final int BOOLEAN = 16;
   public static final int SEMI = 4;
   public static final int STRING = 15;
   public static final int EOF = 0;
@@ -40,7 +41,8 @@ public class sym {
   "ID",
   "INT",
   "DOUBLE",
-  "STRING"
+  "STRING",
+  "BOOLEAN"
   };
 }
 

@@ -72,7 +72,7 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
      * @return The result of exponentiation as a new instance of SMPLReal
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLReal pow(SMPLValue<?> arg) throws SMPLException {
+    public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
         // casting the value to a double here is important to prevent loss of information
         return make(Math.pow((double) value, arg.doubleValue()));
     }

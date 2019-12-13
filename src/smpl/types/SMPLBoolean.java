@@ -3,27 +3,24 @@ package smpl.types;
 import smpl.exceptions.SMPLException;
 import smpl.exceptions.SMPLTypeException;
 
-public class SMPLString extends SMPLValue<SMPLString> {
+public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
     
-    String value;
+    boolean value;
 
-    public SMPLString() {
-        this("");
+    public SMPLBoolean() {
+        this(false);
     }
 
-    public SMPLString(String v) {
+    public SMPLBoolean(Boolean v) {
         value = v;
     }
     
     public SMPLType getType() {
-        return SMPLType.STRING;
+        return SMPLType.BOOLEAN;
     }
     
-    public SMPLString add(SMPLValue<?> arg) throws SMPLException {
-        if (arg.getType() == SMPLType.STRING) {
-            return make(value + arg);
-        }
-        String msg = String.format("unsupported operand type(s) for +: 'STRING' and '%s'", arg.getType());
+    public SMPLBoolean add(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for +: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -33,8 +30,8 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLString sub(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for -: 'STRING' and '%s'", arg.getType());
+    public SMPLInt sub(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for -: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -44,8 +41,8 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The product as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLString mul(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for *: 'STRING' and '%s'", arg.getType());
+    public SMPLInt mul(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for *: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -55,8 +52,8 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The quotient as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLString div(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for /: 'STRING' and '%s'", arg.getType());
+    public SMPLInt div(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for /: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -66,8 +63,8 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The residue modulo arg as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLString mod(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for %: 'STRING' and '%s'", arg.getType());
+    public SMPLInt mod(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for %: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -77,8 +74,8 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The result of exponentiation as a new instance of SMPLReal
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLString pow(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for ^: 'STRING' and '%s'", arg.getType());
+    public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for ^: 'BOOLEAN' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -88,16 +85,16 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLString unary(String arg) throws SMPLException {
-        String msg = String.format("unsupported operand type for %s: 'STRING'", arg);
+    public SMPLInt unary(String arg) throws SMPLException {
+        String msg = String.format("unsupported operand type for %s: 'BOOLEAN'", arg);
         throw new SMPLTypeException(msg);
     }
     
-    public String stringValue() {
+    public boolean boolValue() {
         return value;
     }
 
     public String toString() {
-        return value;
+        return String.valueOf(value);
     }
 }

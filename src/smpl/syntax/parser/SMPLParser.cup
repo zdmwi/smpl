@@ -29,11 +29,21 @@ parser code {:
 		}
 
 		public void syntax_error(Symbol cur_token) {
-		    System.err.print("Line " + lexer.getLine() +
-				     " near char " + lexer.getChar() + ": ");
+		    System.err.println("Line " + lexer.getLine());
+
+            int column = lexer.getColumn();
+
+            for (int i = 0; i < column; i++) {
+                System.err.print(lexer.yycharat(i));
+            }
+            System.err.println();
+
+            // print an indicator on screen that will show the user
+            // where the error is
+            String indicator = String.format("%" + lexer.getColumn() + "s","^");
+            System.err.println(indicator);
+
 		    report_error("Syntax error", cur_token);
-		    System.err.println ("Last token read is " +
-					 lexer.getText());
 		}
 	    :};
 
@@ -65,6 +75,7 @@ terminal String ID;
 terminal Integer INT;
 terminal Double DOUBLE;
 terminal String STRING;
+terminal Boolean BOOLEAN;
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -128,6 +139,7 @@ primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
 
 literal ::= INT:ilit {: RESULT = SMPLValue.make(ilit); :} |
             DOUBLE:dlit {: RESULT = SMPLValue.make(dlit); :} |
-            STRING:slit {: RESULT = SMPLValue.make(slit); :};
+            STRING:slit {: RESULT = SMPLValue.make(slit); :} |
+            BOOLEAN:blit {: RESULT = SMPLValue.make(blit); :};
 
 empty ::= ;

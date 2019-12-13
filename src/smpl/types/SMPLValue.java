@@ -17,8 +17,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @param v the double value to be wrapped
      * @return The SMPLValue instance to represent that double precision value
      */
-    public static SMPLReal make(Double v) {
-        return new SMPLReal(v);
+    public static SMPLDouble make(Double v) {
+        return new SMPLDouble(v);
     }
     
     /**
@@ -37,6 +37,15 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      */
     public static SMPLString make(String v) {
         return new SMPLString(v);
+    }
+
+    /**
+     * Create a SMPL value wrapping a Java boolean
+     * @param v The string value to be wrapped
+     * @return The SMPLValue instance to represent that string value.
+     */
+    public static SMPLBoolean make(Boolean v) {
+        return new SMPLBoolean(v);
     }
     
     /**
