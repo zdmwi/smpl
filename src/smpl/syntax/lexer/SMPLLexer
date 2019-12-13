@@ -68,6 +68,9 @@ hexadecimal = [a-zA-Z0-9]
 
 identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
 
+// adapted from the jflex manual
+comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
+
 %state STRING
 
 %%
@@ -79,6 +82,7 @@ identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
 
 <YYINITIAL>	{ws} {/* skip whitespace */}
 
+/* ARITHMETIC OPERATORS */
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.MUL);}
@@ -86,12 +90,51 @@ identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
 <YYINITIAL> "^" {return new Symbol(sym.POW);}
 
-<YYINITIAL>	"="	{return new Symbol(sym.ASSIGN);}
+/* BITWISE OPERATORS */
+<YYINITIAL> "&" {return new Symbol(sym.AMP);}
+<YYINITIAL> "|" {return new Symbol(sym.PIPE);}
+<YYINITIAL> "~" {return new Symbol(sym.TILDE);}
 
+/* RELATIONAL OPERATORS */
+<YYINITIAL> "=" {return new Symbol(sym.EQ);}
+<YYINITIAL> ">" {return new Symbol(sym.GT);}
+<YYINITIAL> "<" {return new Symbol(sym.LT);}
+<YYINITIAL> "<=" {return new Symbol(sym.LTEQ);}
+<YYINITIAL> ">=" {return new Symbol(sym.GTEQ);}
+<YYINITIAL> "!=" {return new Symbol(sym.NEQ);}
+
+/* LOGICAL OPERATORS */
+<YYINITIAL> "and" {return new Symbol(sym.AND);}
+<YYINITIAL> "or" {return new Symbol(sym.OR);}
+<YYINITIAL> "not" {return new Symbol(sym.NOT);}
+
+/* LIST CONCATENATION */
+<YYINITIAL> "@" {return new Symbol(sym.CONCAT);}
+
+/* SPECIAL CHARACTERS */
+<YYINITIAL>	":=" {return new Symbol(sym.ASSIGN);}
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
+<YYINITIAL> "{" {return new Symbol(sym.LBRACE);}
+<YYINITIAL> "}" {return new Symbol(sym.RBRACE);}
 <YYINITIAL> ";" {return new Symbol(sym.SEMI);}
+<YYINITIAL> "," {return new Symbol(sym.COMMMA);}
 
+/* KEYWORDS */
+<YYINITIAL> "def" {return new Symbol(sym.DEF);}
+<YYINITIAL> "let" {return new Symbol(sym.LET);}
+<YYINITIAL> "proc" {return new Symbol(sym.PROC);}
+<YYINITIAL> "call" {return new Symbol(sym.CALL);}
+<YYINITIAL> "print" {return new Symbol(sym.PRINT);}
+<YYINITIAL> "println" {return new Symbol(sym.PRINLN);}
+<YYINITIAL> "read" {return new Symbol(sym.READ);}
+<YYINITIAL> "readint" {return new Symbol(sym.READINT);}
+<YYINITIAL> "if" {return new Symbol(sym.IF);}
+<YYINITIAL> "then" {return new Symbol(sym.THEN);}
+<YYINITIAL> "else" {return new Symbol(sym.ELSE);}
+<YYINITIAL> "case" {return new Symbol(sym.CASE);}
+
+/* PRIMITIVE VALUES */
 <YYINITIAL> [0-9]+ {
     // INTEGER
     return new Symbol(sym.INT, 
@@ -173,7 +216,10 @@ identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
     return new Symbol(sym.ID, yytext());
 }
 
-<YYINITIAL> "#e" { return new Symbol(sym.NIL); }
+<YYINITIAL> "#e" {return new Symbol(sym.NIL);}
+
+/* COMMENTS */
+<YYINITIAL> {comment} {/* Ignore any comments */}
 
 <STRING> {
     \"               { yybegin(YYINITIAL);
