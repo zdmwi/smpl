@@ -8,11 +8,13 @@ import smpl.exceptions.SMPLException;
 import smpl.semantics.Environment;
 
 import smpl.types.SMPLValue;
+import smpl.types.SMPLProcedure;
 
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.ExpProcedure;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpAdd;
@@ -141,5 +143,10 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
     public SMPLValue<?> visitExpId(ExpId exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
         return env.get(exp.getId());
+    }
+
+    @Override
+    public SMPLValue<?> visitProcDefinition(ExpProcedure exp, Environment<SMPLValue<?>> env) throws SMPLException {
+        return new SMPLProcedure(exp, env);
     }
 }

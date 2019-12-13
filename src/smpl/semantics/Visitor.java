@@ -6,6 +6,7 @@ import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.ExpProcedure;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpAdd;
@@ -33,6 +34,7 @@ public interface Visitor<S, T> {
     public T visitStatement(Statement exp, S arg) throws SMPLException ;
     public T visitStmtSequence(StmtSequence exp, S arg) throws SMPLException ;
     public T visitStmtDefinition(StmtDefinition sd, S arg) throws SMPLException;
+    public T visitProcDefinition(ExpProcedure exp, S arg) throws SMPLException;
 
     // expressions
     public T visitExpAdd(ExpAdd exp, S arg) throws SMPLException ;
