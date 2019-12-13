@@ -70,6 +70,7 @@ terminal LPAREN, RPAREN, SEMI;
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN, POW;
 
+terminal NIL;
 // terminals with values
 terminal String ID;
 terminal Integer INT;

@@ -66,6 +66,8 @@ binary = [01]
 
 hexadecimal = [a-zA-Z0-9]
 
+identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
+
 %state STRING
 
 %%
@@ -148,10 +150,12 @@ hexadecimal = [a-zA-Z0-9]
         new Character((char) ch));
 }
 
-<YYINITIAL> {alpha}{alphanum}* {
+<YYINITIAL> {identifier} {
     // IDENTIFIER
     return new Symbol(sym.ID, yytext());
 }
+
+<YYINITIAL> "#e" { return new Symbol(sym.NIL); }
 
 <STRING> {
     \"               { yybegin(YYINITIAL);
@@ -165,7 +169,7 @@ hexadecimal = [a-zA-Z0-9]
     \\               { string.append('\\'); }
 }
 
-<YYINITIAL> [^\s\"\'\(\)\[\]\{\}:,]+ { 
+<YYINITIAL> [^\s\"\']+ { 
     // ensures all tokens without whitespace separating excluding
     // quotations, parentheses, brackets, braces, colons and commas are
     // caught and dealt with as an error if it doesn't match any of our 

@@ -11,21 +11,22 @@ public class sym {
   public static final int MOD = 9;
   public static final int PLUS = 5;
   public static final int RPAREN = 3;
-  public static final int INT = 13;
+  public static final int INT = 14;
+  public static final int CHARACTER = 17;
   public static final int SEMI = 4;
-  public static final int CHARACTER = 16;
   public static final int POW = 11;
   public static final int LPAREN = 2;
-  public static final int ID = 12;
-  public static final int BOOLEAN = 17;
-  public static final int STRING = 15;
+  public static final int NIL = 12;
+  public static final int ID = 13;
+  public static final int BOOLEAN = 18;
+  public static final int STRING = 16;
   public static final int EOF = 0;
   public static final int DIV = 8;
   public static final int MINUS = 6;
   public static final int error = 1;
   public static final int ASSIGN = 10;
   public static final int MUL = 7;
-  public static final int DOUBLE = 14;
+  public static final int DOUBLE = 15;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -39,6 +40,7 @@ public class sym {
   "MOD",
   "ASSIGN",
   "POW",
+  "NIL",
   "ID",
   "INT",
   "DOUBLE",
