@@ -1,7 +1,6 @@
 package smpl.types;
 
 import smpl.exceptions.SMPLException;
-import smpl.exceptions.SMPLTypeException;
 
 public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
     
@@ -16,12 +15,11 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
     }
     
     public SMPLType getType() {
-        return SMPLType.INT;
+        return SMPLType.CHARACTER;
     }
     
-    public SMPLCharacter add(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for +: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+    public SMPLInt add(SMPLValue<?> arg) throws SMPLException {
+        return make(value + arg.intValue());
     }
 
     /**
@@ -30,9 +28,8 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLCharacter sub(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for -: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+    public SMPLInt sub(SMPLValue<?> arg) throws SMPLException {
+        return make(value - arg.intValue());
     }
 
     /**
@@ -41,9 +38,8 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @return The product as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLCharacter mul(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for *: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+    public SMPLInt mul(SMPLValue<?> arg) throws SMPLException {
+        return make(value * arg.intValue());
     }
 
     /**
@@ -52,9 +48,8 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @return The quotient as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLCharacter div(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for /: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+    public SMPLInt div(SMPLValue<?> arg) throws SMPLException {
+        return make(value * arg.intValue());
     }
 
     /**
@@ -63,9 +58,8 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @return The residue modulo arg as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLCharacter mod(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for %: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+    public SMPLInt mod(SMPLValue<?> arg) throws SMPLException {
+        return make(value % arg.intValue());
     }
 
     /**
@@ -75,8 +69,7 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLDouble pow(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for ^: 'BOOLEAN' and '%s'", arg.getType());
-        throw new SMPLTypeException(msg);
+        return make(Math.pow(value, arg.doubleValue()));
     }
 
     /**
@@ -85,12 +78,14 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLCharacter unary(String arg) throws SMPLException {
-        String msg = String.format("unsupported operand type for %s: 'BOOLEAN'", arg);
-        throw new SMPLTypeException(msg);
+    public SMPLInt unary(String arg) throws SMPLException {
+        if (arg.equals("+")) {
+            return make(intValue());
+        }
+        return make(-intValue());
     }
     
-    public char charValue() {
+    public int intValue() {
         return value;
     }
 
