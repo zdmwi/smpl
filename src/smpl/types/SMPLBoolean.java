@@ -95,6 +95,6 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
     }
 
     public String toString() {
-        return String.valueOf(value);
+        return "#" + String.valueOf(value).substring(0, 1);
     }
 }

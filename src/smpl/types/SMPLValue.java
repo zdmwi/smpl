@@ -40,8 +40,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     }
 
     /**
-     * Create a SMPL value wrapping a Java string
-     * @param v The string value to be wrapped
+     * Create a SMPL value wrapping a Java character
+     * @param v The character value to be wrapped
      * @return The SMPLValue instance to represent that string value.
      */
     public static SMPLCharacter make(Character v) {

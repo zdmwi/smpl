@@ -1,7 +1,7 @@
 package smpl.types;
 
 public enum SMPLType {
-    INT("int"), 
+    INT("int"),
     DOUBLE("double"),
     STRING("string"),
     CHARACTER("char"),

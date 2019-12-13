@@ -92,6 +92,20 @@ alphanum = {alpha}|[0-9]
             new Integer(yytext()));
 }
 
+<YYINITIAL> "#b"[01]+ {
+    // BINARY
+    String val = yytext().substring(2);
+    return new Symbol(sym.INT,
+        Integer.parseInt(val, 2));
+}
+
+<YYINITIAL> "#x"[a-zA-Z0-9]+ {
+    // HEXADECIMAL
+    String val = yytext().substring(2);
+    return new Symbol(sym.INT,
+        Integer.parseInt(val, 16));
+}
+
 <YYINITIAL> [0-9]*\.[0-9]+ {
     // DOUBLE
     return new Symbol(sym.DOUBLE,

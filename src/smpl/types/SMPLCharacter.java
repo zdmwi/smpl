@@ -95,6 +95,6 @@ public class SMPLCharacter extends SMPLValue<SMPLCharacter> {
     }
 
     public String toString() {
-        return String.valueOf(value);
+        return "#c" + String.valueOf(value);
     }
 }
