@@ -149,7 +149,7 @@ public class Main {
     public static <S, T> void parseWalkShow(Reader reader,
 					                        PersistentWalker<S, T> walker) {
         SMPLParser parser;
-        Exp ast = null; // ArithProgram extends Exp
+        Exp ast = null; // SMPLProgram extends Exp
         try {
             parser = new SMPLParser(new SMPLLexer(reader));
             // now parse the input to produce an AST for the program

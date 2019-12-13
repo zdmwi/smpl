@@ -6,6 +6,7 @@ import java.util.Iterator;
 import smpl.exceptions.UnboundVarException;
 
 import smpl.types.SMPLValue;
+import smpl.types.SMPLInt;
 
 /**
  * An instance of class <code>Environment</code> maintains a
@@ -19,11 +20,8 @@ import smpl.types.SMPLValue;
 public class Environment<T extends SMPLValue<?>> {
 
     HashMap<String, T> dictionary;
+    Environment<T> parent = null;
 
-    /**
-     * Create a new (empty) top level Environment.
-     *
-     */
     public Environment() {
 	    dictionary = new HashMap<>();
     }
@@ -46,6 +44,21 @@ public class Environment<T extends SMPLValue<?>> {
     }
 
     /**
+     * Creates a new environment that extends a given one with some new bindings
+     * @param ids the identifiers of the new bindings
+     * @param values the values of the new bindings
+     * @param p The environment being extended, which will be the parent of the
+     * new environment that is created.
+     */
+    public Environment(String[] ids, T[] values, Environment<T> p) {
+        parent = p;
+        dictionary = new HashMap<>();
+        for (int i = 0; i < ids.length; i++) {
+            put(ids[i], values[i]);
+        }
+    }
+
+    /**
      * Create an instance of a global environment suitable for
      * evaluating an program.
      *
@@ -53,8 +66,13 @@ public class Environment<T extends SMPLValue<?>> {
      */
     public static <T extends SMPLValue<T>> Environment<T> makeGlobalEnv() {
         Environment<T> result =  new Environment<>();
-        // add definitions for any primitive procedures or
-        // constants here
+
+        // add builtin functions
+        result.put("pair", null);
+        result.put("car", null);
+        result.put("cdr", null);
+        result.put("pair?", null);
+
         return result;
     }
 
@@ -79,8 +97,12 @@ public class Environment<T extends SMPLValue<?>> {
      */
     public T get(String id) throws UnboundVarException {
         T result = dictionary.get(id);
-        if (result == null)
-            throw new UnboundVarException(id);
+        if (result == null) {
+            if (parent == null)
+                throw new UnboundVarException(id);
+            else
+                return parent.get(id);
+        }
         else
             return result;
     }

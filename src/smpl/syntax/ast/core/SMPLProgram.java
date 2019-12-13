@@ -10,18 +10,18 @@ public class SMPLProgram extends Exp {
     StmtSequence seq;
 
     public SMPLProgram(StmtSequence s) {
-	seq = s;
+	    seq = s;
     }
 
     public StmtSequence getSeq() {
-	return seq;
+	    return seq;
     }
 
     public <S, T> T visit(Visitor<S, T> v, S arg) throws SMPLException {
-	return v.visitSMPLProgram(this, arg);
+	    return v.visitSMPLProgram(this, arg);
     }
 
     public String toString() {
-	return seq.toString();
+	    return seq.toString();
     }
 }
