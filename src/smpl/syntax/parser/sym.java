@@ -8,39 +8,89 @@ package smpl.syntax.parser;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int MOD = 9;
-  public static final int PLUS = 5;
-  public static final int RPAREN = 3;
-  public static final int INT = 14;
-  public static final int CHARACTER = 17;
-  public static final int SEMI = 4;
   public static final int POW = 11;
+  public static final int GTEQ = 19;
+  public static final int LTEQ = 18;
+  public static final int CONCAT = 24;
+  public static final int READINT = 33;
+  public static final int CASE = 37;
+  public static final int DOUBLE = 40;
   public static final int LPAREN = 2;
-  public static final int NIL = 12;
-  public static final int ID = 13;
-  public static final int BOOLEAN = 18;
-  public static final int STRING = 16;
+  public static final int SEMI = 4;
+  public static final int INT = 39;
+  public static final int PRINTLN = 31;
+  public static final int MINUS = 7;
+  public static final int CHARACTER = 42;
+  public static final int RPAREN = 3;
+  public static final int NOT = 23;
+  public static final int AND = 21;
+  public static final int LT = 17;
+  public static final int NIL = 25;
+  public static final int OR = 22;
+  public static final int CALL = 29;
+  public static final int BAND = 12;
+  public static final int DIV = 9;
+  public static final int BNOR = 14;
+  public static final int PLUS = 6;
+  public static final int ASSIGN = 5;
+  public static final int IF = 34;
+  public static final int ID = 38;
+  public static final int BOOLEAN = 43;
   public static final int EOF = 0;
-  public static final int DIV = 8;
-  public static final int MINUS = 6;
   public static final int error = 1;
-  public static final int ASSIGN = 10;
-  public static final int MUL = 7;
-  public static final int DOUBLE = 15;
+  public static final int MUL = 8;
+  public static final int MOD = 10;
+  public static final int NEQ = 20;
+  public static final int EQ = 15;
+  public static final int ELSE = 36;
+  public static final int BOR = 13;
+  public static final int READ = 32;
+  public static final int LET = 27;
+  public static final int THEN = 35;
+  public static final int STRING = 41;
+  public static final int PROC = 28;
+  public static final int DEF = 26;
+  public static final int GT = 16;
+  public static final int PRINT = 30;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "LPAREN",
   "RPAREN",
   "SEMI",
+  "ASSIGN",
   "PLUS",
   "MINUS",
   "MUL",
   "DIV",
   "MOD",
-  "ASSIGN",
   "POW",
+  "BAND",
+  "BOR",
+  "BNOR",
+  "EQ",
+  "GT",
+  "LT",
+  "LTEQ",
+  "GTEQ",
+  "NEQ",
+  "AND",
+  "OR",
+  "NOT",
+  "CONCAT",
   "NIL",
+  "DEF",
+  "LET",
+  "PROC",
+  "CALL",
+  "PRINT",
+  "PRINTLN",
+  "READ",
+  "READINT",
+  "IF",
+  "THEN",
+  "ELSE",
+  "CASE",
   "ID",
   "INT",
   "DOUBLE",

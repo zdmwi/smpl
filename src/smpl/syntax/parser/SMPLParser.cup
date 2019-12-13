@@ -65,12 +65,29 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal LPAREN, RPAREN, SEMI;
+terminal LPAREN, RPAREN, SEMI, ASSIGN;
 
 // arithmetic operators
-terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN, POW;
+terminal PLUS, MINUS, MUL, DIV, MOD, POW;
+
+// bitwise operators
+terminal BAND, BOR, BNOR;
+
+// relational operators
+terminal EQ, GT, LT, LTEQ, GTEQ, NEQ;
+
+// logical operators
+terminal AND, OR, NOT;
+
+// list concatenation
+terminal CONCAT;
 
 terminal NIL;
+
+// keywords
+terminal DEF, LET, PROC, CALL, PRINT, PRINTLN, READ, READINT;
+terminal IF, THEN, ELSE, CASE;
+
 // terminals with values
 terminal String ID;
 terminal Integer INT;
@@ -78,7 +95,6 @@ terminal Double DOUBLE;
 terminal String STRING;
 terminal Character CHARACTER;
 terminal Boolean BOOLEAN;
-
 
 /* Non terminals */
 non terminal SMPLProgram program;
