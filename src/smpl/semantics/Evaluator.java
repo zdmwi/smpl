@@ -2,6 +2,7 @@ package smpl.semantics;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import smpl.exceptions.SMPLException;
 
@@ -9,12 +10,14 @@ import smpl.semantics.Environment;
 
 import smpl.types.SMPLValue;
 import smpl.types.SMPLProcedure;
-
+import smpl.types.SMPLString;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
 import smpl.syntax.ast.ExpProcedure;
+import smpl.syntax.ast.ExpRead;
+import smpl.syntax.ast.ExpReadInt;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpLT;
@@ -30,6 +33,8 @@ import smpl.syntax.ast.ExpNEQ;
 import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
+import smpl.syntax.ast.ExpPrint;
+import smpl.syntax.ast.ExpPrintLn;
 import smpl.syntax.ast.ExpDiv;
 import smpl.syntax.ast.ExpEQ;
 import smpl.syntax.ast.ExpGT;
@@ -86,6 +91,40 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         result = sd.getExp().visit(this, env);
         env.put(sd.getVar(), result);
         return result;
+    }
+
+    public SMPLValue<?> visitExpPrint(ExpPrint exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        System.out.print(exp.getExp().visit(this, env));
+        return null;
+    }
+
+    public SMPLValue<?> visitExpPrintLn(ExpPrintLn exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        System.out.println(exp.getExp().visit(this, env));
+        return null;
+    }
+
+    public SMPLValue<?> visitExpRead(ExpRead exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        Scanner scan = new Scanner(System.in);
+        try {
+            result = SMPLValue.make(scan.nextLine());
+            return result;
+        } catch (Exception e) {
+            throw new SMPLException();
+        }
+    }
+
+    public SMPLValue<?> visitExpReadInt(ExpReadInt exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        Scanner scan = new Scanner(System.in);
+        try {
+            result = SMPLValue.make(scan.nextInt());
+            return result;
+        } catch(Exception e) {
+            throw new SMPLException("Input Mismatch Error: Value is not an INT");
+        }
     }
 
     public SMPLValue<?> visitExpAdd(ExpAdd exp, 

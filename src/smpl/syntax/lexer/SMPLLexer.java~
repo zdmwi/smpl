@@ -830,7 +830,7 @@ public class SMPLLexer implements java_cup.runtime.Scanner {
             // fall through
           case 73: break;
           case 13: 
-            { return new Symbol(sym.BNOR);
+            { return new Symbol(sym.BNOT);
             } 
             // fall through
           case 74: break;

@@ -103,21 +103,18 @@ non terminal Statement stmt;
 non terminal StmtDefinition definition;
 non terminal Exp expression;
 
+/* side effect non-terminals */
+non terminal Exp ioStmt;
+
 /* logical non-terminals */
 non terminal Exp logicExp;
 non terminal Exp orComp;
-non terminal Exp andComp;
-non terminal Exp notComp;
 
 /* relational non-terminals */
 non terminal Exp relExp;
-non terminal Exp neqRel;
-non terminal Exp lgeqRel;
 
 /* bitwise non-terminals */
 non terminal Exp bitExp;
-non terminal Exp pipeOp;
-non terminal Exp ampOp;
 
 /* arithmetic expressions */
 non terminal Exp arithExp;
@@ -146,7 +143,17 @@ stmt ::= definition:d {: RESULT = d; :} |
 definition ::= ID:id ASSIGN expression:e SEMI {:
 		            RESULT = new StmtDefinition(id, e); :};
 
-expression ::= logicExp:l {: RESULT = l; :};
+expression ::= logicExp:l {: RESULT = l; :} |
+               ioStmt:io {: RESULT = io; :};
+
+ioStmt ::= PRINT LPAREN expression:e RPAREN {:
+                    RESULT = new ExpPrint(e); :} |
+           PRINTLN LPAREN expression:e RPAREN {:
+                    RESULT = new ExpPrintLn(e); :} |
+           READ LPAREN RPAREN {:
+                    RESULT = new ExpRead(); :} |
+           READINT LPAREN RPAREN {:
+                    RESULT = new ExpReadInt(); :};
 
 logicExp ::= logicExp:e OR orComp:o {:
                 RESULT = new ExpOr(e, o); :} |

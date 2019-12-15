@@ -1,8 +1,6 @@
 package smpl.sys;
 
-import java_cup.runtime.*;
 import java.io.*;
-import java.util.Scanner;
 import java.util.ArrayList;
 
 import smpl.exceptions.TokenException;
