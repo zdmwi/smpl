@@ -14,10 +14,12 @@ import smpl.syntax.ast.ExpLTEQ;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpAnd;
 import smpl.syntax.ast.ExpBAND;
+import smpl.syntax.ast.ExpBNOT;
 import smpl.syntax.ast.ExpBOR;
 import smpl.syntax.ast.ExpSub;
 import smpl.syntax.ast.ExpMul;
 import smpl.syntax.ast.ExpNEQ;
+import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpDiv;
 import smpl.syntax.ast.ExpEQ;
@@ -58,10 +60,12 @@ public interface Visitor<S, T> {
     // logical expressions
     public T visitExpOr(ExpOr exp, S arg) throws SMPLException;
     public T visitExpAnd(ExpAnd exp, S arg) throws SMPLException;
+    public T visitExpNot(ExpNot exp, S arg) throws SMPLException;
 
     // bitwise expressions
     public T visitExpBAND(ExpBAND exp, S arg) throws SMPLException;
     public T visitExpBOR(ExpBOR exp, S arg) throws SMPLException;
+    public T visitExpBNOT(ExpBNOT exp, S arg) throws SMPLException;
 
     // relational expressions
     public T visitExpEQ(ExpEQ exp, S arg) throws SMPLException;

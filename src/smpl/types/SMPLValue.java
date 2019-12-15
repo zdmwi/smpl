@@ -137,7 +137,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Compute the logical OR of this value and the given value.
      * @param arg The second operand
-     * @return The result of the bitwise OR between the operands
+     * @return The result of the logical OR between the values
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> or(SMPLValue<?> arg) throws SMPLException {
@@ -147,10 +147,20 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     /**
      * Compute the logical AND of this value and the given value.
      * @param arg The second operand
-     * @return The result of the bitwise OR between the operands
+     * @return The result of the logical AND between the values
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> and(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation and called with non-boolean type");
+    }
+
+    /**
+     * Compute the logical NOT of this value.
+     * @param arg The second operand
+     * @return The result of the logical NOT of the value
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> not() throws SMPLException {
         throw new SMPLTypeException("Operation and called with non-boolean type");
     }
 
@@ -172,6 +182,16 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      */
     public SMPLValue<?> bor(SMPLValue<?> arg) throws SMPLException {
         throw new SMPLTypeException("Operation bitwise OR called with non-numeric type");
+    }
+
+    /**
+     * Compute the bitwise OR of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise NOT of the operand
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> bnot() throws SMPLException {
+        throw new SMPLTypeException("Operation bitwise NOT called with non-numeric type");
     }
 
     /**

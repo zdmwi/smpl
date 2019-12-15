@@ -873,7 +873,7 @@ class CUP$SMPLParser$actions {
 		int uleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).left;
 		int uright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).right;
 		Exp u = (Exp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
-		 RESULT = new ExpUnary("~", u); 
+		 RESULT = new ExpBNOT(u); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("unary",18, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;
@@ -885,7 +885,7 @@ class CUP$SMPLParser$actions {
 		int uleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).left;
 		int uright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).right;
 		Exp u = (Exp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
-		 RESULT = new ExpUnary("not", u); 
+		 RESULT = new ExpNot(u); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("unary",18, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;

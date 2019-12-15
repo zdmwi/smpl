@@ -39,6 +39,16 @@ public class SMPLBoolean extends SMPLValue<SMPLBoolean> {
     }
 
     /**
+     * Compute the logical NOT of this value.
+     * @param arg The second operand
+     * @return The result of the logical NOT of the value
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean not() throws SMPLException {
+        return make(!value);
+    }
+
+    /**
      * Check if the value and the given value are equal.
      * @param arg The second operand
      * @return The boolean result of the equality comparison

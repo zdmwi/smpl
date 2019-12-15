@@ -22,10 +22,12 @@ import smpl.syntax.ast.ExpLTEQ;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpAnd;
 import smpl.syntax.ast.ExpBAND;
+import smpl.syntax.ast.ExpBNOT;
 import smpl.syntax.ast.ExpBOR;
 import smpl.syntax.ast.ExpSub;
 import smpl.syntax.ast.ExpMul;
 import smpl.syntax.ast.ExpNEQ;
+import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
 import smpl.syntax.ast.ExpDiv;
@@ -153,6 +155,14 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return val1.and(val2);
     }
 
+    public SMPLValue<?> visitExpNot(ExpNot exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1;
+
+        val1 = exp.getExp().visit(this, env);
+        return val1.not();
+    }
+
     public SMPLValue<?> visitExpBAND(ExpBAND exp,
         Environment<SMPLValue<?>> env) throws SMPLException {
         SMPLValue<?> val1, val2;
@@ -169,6 +179,14 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.bor(val2);
+    }
+
+    public SMPLValue<?> visitExpBNOT(ExpBNOT exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1;
+
+        val1 = exp.getExp().visit(this, env);
+        return val1.bnot();
     }
 
     public SMPLValue<?> visitExpEQ(ExpEQ exp,

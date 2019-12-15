@@ -196,8 +196,8 @@ factor ::= unary:u POW factor:f {:
 
 unary ::= PLUS unary:u {: RESULT = new ExpUnary("+", u); :} |
           MINUS unary:u {: RESULT = new ExpUnary("-", u); :} |
-          BNOT unary:u {: RESULT = new ExpUnary("~", u); :} |
-          NOT unary:u {: RESULT = new ExpUnary("not", u); :} |
+          BNOT unary:u {: RESULT = new ExpBNOT(u); :} |
+          NOT unary:u {: RESULT = new ExpNot(u); :} |
           primary:p {: RESULT = p; :};
 
 primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
