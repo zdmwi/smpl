@@ -17,6 +17,86 @@ public class SMPLInt extends SMPLValue<SMPLInt> {
     public SMPLType getType() {
         return SMPLType.INT;
     }
+
+    /**
+     * Compute the bitwise AND of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise AND between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLInt band(SMPLValue<?> arg) throws SMPLException {
+        return make(value & arg.intValue());
+    }
+
+    /**
+     * Compute the bitwise OR of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise OR between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLInt bor(SMPLValue<?> arg) throws SMPLException {
+        return make(value | arg.intValue());
+    }
+
+    /**
+     * Check if the value and the given value are equal.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean eq(SMPLValue<?> arg) throws SMPLException {
+        return make(value == arg.doubleValue());
+    }
+
+    /**
+     * Check if the value is greater than the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean gt(SMPLValue<?> arg) throws SMPLException {
+        return make(value > arg.doubleValue());
+    }
+
+    /**
+     * Check if the value is greater than or equal to the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean gteq(SMPLValue<?> arg) throws SMPLException {
+        return make(value >= arg.doubleValue());
+    }
+
+    /**
+     * Check if the value is lesser than the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean lt(SMPLValue<?> arg) throws SMPLException {
+        return make(value < arg.doubleValue());
+    }
+
+    /**
+     * Check if the value is lesser than or equal to the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean lteq(SMPLValue<?> arg) throws SMPLException {
+        return make(value <= arg.doubleValue());
+    }
+
+    /**
+     * Check if the value and the given value are not equal.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLBoolean neq(SMPLValue<?> arg) throws SMPLException {
+        return make(value != arg.doubleValue());
+    }
     
     public SMPLInt add(SMPLValue<?> arg) throws SMPLException {
         return make(value + arg.intValue());

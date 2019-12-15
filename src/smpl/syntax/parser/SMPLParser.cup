@@ -65,13 +65,13 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal LPAREN, RPAREN, SEMI, ASSIGN;
+terminal LPAREN, RPAREN, LBRACE, RBRACE, COMMA, SEMI, ASSIGN;
 
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, POW;
 
 // bitwise operators
-terminal BAND, BOR, BNOR;
+terminal BAND, BOR, BNOT;
 
 // relational operators
 terminal EQ, GT, LT, LTEQ, GTEQ, NEQ;
@@ -102,6 +102,24 @@ non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtDefinition definition;
 non terminal Exp expression;
+
+/* logical non-terminals */
+non terminal Exp logicExp;
+non terminal Exp orComp;
+non terminal Exp andComp;
+non terminal Exp notComp;
+
+/* relational non-terminals */
+non terminal Exp relExp;
+non terminal Exp neqRel;
+non terminal Exp lgeqRel;
+
+/* bitwise non-terminals */
+non terminal Exp bitExp;
+non terminal Exp pipeOp;
+non terminal Exp ampOp;
+
+/* arithmetic expressions */
 non terminal Exp arithExp;
 non terminal Exp term;
 non terminal Exp factor;
@@ -128,7 +146,35 @@ stmt ::= definition:d {: RESULT = d; :} |
 definition ::= ID:id ASSIGN expression:e SEMI {:
 		            RESULT = new StmtDefinition(id, e); :};
 
-expression ::= arithExp:a {: RESULT = a; :};
+expression ::= logicExp:l {: RESULT = l; :};
+
+logicExp ::= logicExp:e OR orComp:o {:
+                RESULT = new ExpOr(e, o); :} |
+              orComp:o {: RESULT = o; :};
+
+orComp ::= orComp:o AND relExp:r {:
+                RESULT = new ExpAnd(o, r); :} |
+           relExp:r {: RESULT = r; :};
+
+relExp ::= relExp:r NEQ bitExp:b {:
+                RESULT = new ExpNEQ(r, b); :} |
+           relExp:r GTEQ bitExp:b {:
+                RESULT = new ExpGTEQ(r, b); :} |
+           relExp:r LTEQ bitExp:b {:
+                RESULT = new ExpLTEQ(r, b); :} |
+           relExp:r LT bitExp:b {:
+                RESULT = new ExpLT(r, b); :} |
+           relExp:r GT bitExp:b {:
+                RESULT = new ExpGT(r, b); :} |
+           relExp:r EQ bitExp:b {:
+                RESULT = new ExpEQ(r, b); :} |
+           bitExp:b {: RESULT = b; :};
+
+bitExp ::= bitExp:b BOR arithExp:a {:
+                RESULT = new ExpBOR(b, a); :} |
+           bitExp:b BAND arithExp:a {:
+                RESULT = new ExpBAND(b, a); :} |
+           arithExp:a {: RESULT = a; :};
 
 arithExp ::= arithExp:e PLUS term:t {:
                 RESULT = new ExpAdd(e, t); :} |
@@ -150,6 +196,8 @@ factor ::= unary:u POW factor:f {:
 
 unary ::= PLUS unary:u {: RESULT = new ExpUnary("+", u); :} |
           MINUS unary:u {: RESULT = new ExpUnary("-", u); :} |
+          BNOT unary:u {: RESULT = new ExpUnary("~", u); :} |
+          NOT unary:u {: RESULT = new ExpUnary("not", u); :} |
           primary:p {: RESULT = p; :};
 
 primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |

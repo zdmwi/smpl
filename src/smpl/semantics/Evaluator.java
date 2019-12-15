@@ -17,11 +17,21 @@ import smpl.syntax.ast.StmtDefinition;
 import smpl.syntax.ast.ExpProcedure;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
+import smpl.syntax.ast.ExpLT;
+import smpl.syntax.ast.ExpLTEQ;
 import smpl.syntax.ast.ExpAdd;
+import smpl.syntax.ast.ExpAnd;
+import smpl.syntax.ast.ExpBAND;
+import smpl.syntax.ast.ExpBOR;
 import smpl.syntax.ast.ExpSub;
 import smpl.syntax.ast.ExpMul;
+import smpl.syntax.ast.ExpNEQ;
+import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
 import smpl.syntax.ast.ExpDiv;
+import smpl.syntax.ast.ExpEQ;
+import smpl.syntax.ast.ExpGT;
+import smpl.syntax.ast.ExpGTEQ;
 import smpl.syntax.ast.ExpMod;
 import smpl.syntax.ast.ExpUnary;
 
@@ -123,6 +133,96 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         val1 = exp.getExpL().visit(this, env);
         val2 = exp.getExpR().visit(this, env);
         return val1.pow(val2);
+    }
+
+    public SMPLValue<?> visitExpOr(ExpOr exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.or(val2);
+    }
+
+    public SMPLValue<?> visitExpAnd(ExpAnd exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.and(val2);
+    }
+
+    public SMPLValue<?> visitExpBAND(ExpBAND exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.band(val2);
+    }
+
+    public SMPLValue<?> visitExpBOR(ExpBOR exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.bor(val2);
+    }
+
+    public SMPLValue<?> visitExpEQ(ExpEQ exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.eq(val2);
+    }
+
+    public SMPLValue<?> visitExpGT(ExpGT exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.gt(val2);
+    }
+
+    public SMPLValue<?> visitExpGTEQ(ExpGTEQ exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.gteq(val2);
+    }
+
+    public SMPLValue<?> visitExpLT(ExpLT exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.lt(val2);
+    }
+
+    public SMPLValue<?> visitExpLTEQ(ExpLTEQ exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.lteq(val2);
+    }
+
+    public SMPLValue<?> visitExpNEQ(ExpNEQ exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        SMPLValue<?> val1, val2;
+
+        val1 = exp.getExpL().visit(this, env);
+        val2 = exp.getExpR().visit(this, env);
+        return val1.neq(val2);
     }
 
     public SMPLValue<?> visitExpUnary(ExpUnary exp,

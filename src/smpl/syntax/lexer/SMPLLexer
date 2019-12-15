@@ -69,7 +69,11 @@ hexadecimal = [a-zA-Z0-9]
 identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]+
 
 // adapted from the jflex manual
-comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
+singleLineComment = "//"[^\n\r]*{nl}?
+
+multiLineComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+
+comment = {singleLineComment} /*| {multiLineComment} */
 
 %state STRING
 
@@ -93,7 +97,7 @@ comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
 /* BITWISE OPERATORS */
 <YYINITIAL> "&" {return new Symbol(sym.BAND);}
 <YYINITIAL> "|" {return new Symbol(sym.BOR);}
-<YYINITIAL> "~" {return new Symbol(sym.BNOR);}
+<YYINITIAL> "~" {return new Symbol(sym.BNOT);}
 
 /* RELATIONAL OPERATORS */
 <YYINITIAL> "=" {return new Symbol(sym.EQ);}
@@ -118,7 +122,7 @@ comment = "//"[^nl]*[nl]? | "/*"[^*] ~"*/" | "/*" "*"+ "/"
 <YYINITIAL> "{" {return new Symbol(sym.LBRACE);}
 <YYINITIAL> "}" {return new Symbol(sym.RBRACE);}
 <YYINITIAL> ";" {return new Symbol(sym.SEMI);}
-<YYINITIAL> "," {return new Symbol(sym.COMMMA);}
+<YYINITIAL> "," {return new Symbol(sym.COMMA);}
 
 /* KEYWORDS */
 <YYINITIAL> "def" {return new Symbol(sym.DEF);}

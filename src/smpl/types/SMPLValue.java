@@ -135,6 +135,106 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
     }
 
     /**
+     * Compute the logical OR of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise OR between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> or(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation OR called with non-boolean type");
+    }
+
+    /**
+     * Compute the logical AND of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise OR between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> and(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation and called with non-boolean type");
+    }
+
+    /**
+     * Compute the bitwise AND of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise AND between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> band(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation bitwise AND called with non-numeric type");
+    }
+
+    /**
+     * Compute the bitwise OR of this value and the given value.
+     * @param arg The second operand
+     * @return The result of the bitwise OR between the operands
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> bor(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation bitwise OR called with non-numeric type");
+    }
+
+    /**
+     * Check if the value and the given value are equal.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> eq(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
+     * Check if the value is greater than the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> gt(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
+     * Check if the value is greater than or equal to the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> gteq(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
+     * Check if the value is lesser than the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> lt(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
+     * Check if the value is lesser than or equal to the given value.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> lteq(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
+     * Check if the value and the given value are not equal.
+     * @param arg The second operand
+     * @return The boolean result of the comparison
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> neq(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException();
+    }
+
+    /**
      *
      * @return The integer value wrapped in this SMPL value
      * @throws SMPLTypeException If there is no such integer
@@ -145,10 +245,28 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
 
     /**
      *
-     * @return The real value wrapped in this SMPL value
+     * @return The double value wrapped in this SMPL value
      * @throws SMPLTypeException if there is no such real value.
      */
     public double doubleValue() throws SMPLTypeException {
         throw new SMPLTypeException(SMPLType.DOUBLE, getType());
+    }
+
+    /**
+     *
+     * @return The boolean value wrapped in this SMPL value
+     * @throws SMPLTypeException If there is no such integer
+     */
+    public boolean boolValue() throws SMPLTypeException {
+        throw new SMPLTypeException(SMPLType.BOOLEAN, getType());
+    }
+
+    /**
+     *
+     * @return The String value wrapped in this SMPL value
+     * @throws SMPLTypeException If there is no such integer
+     */
+    public String stringValue() throws SMPLTypeException {
+        throw new SMPLTypeException(SMPLType.STRING, getType());
     }
 }
