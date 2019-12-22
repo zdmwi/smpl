@@ -152,7 +152,7 @@ public class Environment<T extends SMPLValue<?>> {
         body = new ExpIsEqual("e1", "e2");
         procedure = new ExpProcedure(params, body);
         SMPLProcedure isEqual = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
-        result.put("equal?", null);
+        result.put("equal?", (T) isEqual);
 
         params = new ArrayList<>();
         params.add("e1");
