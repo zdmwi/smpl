@@ -10,6 +10,7 @@ import smpl.syntax.ast.core.Exp;
 
 public class ExpProcedure extends Exp {
     
+    String id;
     ArrayList<String> parameters;
     Exp body;
 
@@ -17,9 +18,18 @@ public class ExpProcedure extends Exp {
         super();
     }
 
+    public ExpProcedure(String id, Exp body) {
+        this.id = id;
+        this.body = body;
+    }
+
     public ExpProcedure(ArrayList<String> parameters, Exp body) {
         this.parameters = parameters;
         this.body = body;
+    }
+
+    public String getNamedParameter() {
+        return id;
     }
 
     public ArrayList<String> getParameters() {

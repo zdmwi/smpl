@@ -20,7 +20,7 @@ import smpl.types.SMPLValue;
 
 public class Main {
 
-    public static final String PROMPT = ">>>";
+    public static final String PROMPT = ">>> ";
 
     private static final String MESSAGE = "SMPL Version 1.0.0 :: " +
                                           "COMP3652 Project 1";

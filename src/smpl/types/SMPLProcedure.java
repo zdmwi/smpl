@@ -54,7 +54,7 @@ public class SMPLProcedure extends SMPLValue<SMPLProcedure> {
                 }
         }
         String body = procExp.getBody().toString();
-        return String.format("[Function: (%s) -> %s]", params, body);
+        return String.format("[Procedure: (%s) -> %s]", params, body);
     }
     
 }

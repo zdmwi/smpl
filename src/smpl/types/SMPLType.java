@@ -7,6 +7,7 @@ public enum SMPLType {
     CHARACTER("char"),
     BOOLEAN("boolean"),
     PAIR("pair"),
+    VECTOR("vector"),
     PROCEDURE("proc");
     
     SMPLType(String docString) {

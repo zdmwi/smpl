@@ -1,18 +1,29 @@
 package smpl.semantics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import smpl.builtin.ExpCreateList;
+import smpl.builtin.ExpCreatePair;
+import smpl.builtin.ExpGetSize;
+import smpl.builtin.ExpIsEqual;
+import smpl.builtin.ExpIsEqv;
+import smpl.builtin.ExpIsPair;
+import smpl.builtin.ExpPairCAR;
+import smpl.builtin.ExpPairCDR;
+import smpl.builtin.ExpSubstring;
 import smpl.exceptions.UnboundVarException;
-
+import smpl.syntax.ast.ExpProcedure;
+import smpl.syntax.ast.core.Exp;
 import smpl.types.SMPLValue;
 import smpl.types.SMPLInt;
+import smpl.types.SMPLProcedure;
 
 /**
- * An instance of class <code>Environment</code> maintains a
- * collection of bindings from valid identifiers to integers.
- * It supports storing and retrieving bindings, just as would
- * be expected in any dictionary.
+ * An instance of class <code>Environment</code> maintains a collection of
+ * bindings from valid identifiers to integers. It supports storing and
+ * retrieving bindings, just as would be expected in any dictionary.
  *
  * @author <a href="mailto:dcoore@uwimona.edu.jm">Daniel Coore</a>
  * @version 1.0
@@ -23,18 +34,17 @@ public class Environment<T extends SMPLValue<?>> {
     Environment<T> parent = null;
 
     public Environment() {
-	    dictionary = new HashMap<>();
+        dictionary = new HashMap<>();
     }
 
     /**
-     * Creates a new <code>Environment</code> instance that is
-     * initialised with the given collection of bindings
-     * (presented as separate arrays of names and values).
+     * Creates a new <code>Environment</code> instance that is initialised with the
+     * given collection of bindings (presented as separate arrays of names and
+     * values).
      *
-     * @param ids the collection of identifiers to be bound.
-     * @param values the corresponding collection of values
-     * for the identifiers.  Note that the two arrays must
-     * have the same length.
+     * @param ids    the collection of identifiers to be bound.
+     * @param values the corresponding collection of values for the identifiers.
+     *               Note that the two arrays must have the same length.
      */
     public Environment(String[] ids, T[] values) {
         dictionary = new HashMap<>();
@@ -45,10 +55,11 @@ public class Environment<T extends SMPLValue<?>> {
 
     /**
      * Creates a new environment that extends a given one with some new bindings
-     * @param ids the identifiers of the new bindings
+     * 
+     * @param ids    the identifiers of the new bindings
      * @param values the values of the new bindings
-     * @param p The environment being extended, which will be the parent of the
-     * new environment that is created.
+     * @param p      The environment being extended, which will be the parent of the
+     *               new environment that is created.
      */
     public Environment(String[] ids, T[] values, Environment<T> p) {
         parent = p;
@@ -59,19 +70,98 @@ public class Environment<T extends SMPLValue<?>> {
     }
 
     /**
-     * Create an instance of a global environment suitable for
-     * evaluating an program.
+     * Create a new environment that extends a given one with some new bindings
+     * 
+     * @param ids    The identifiers of the new bindings
+     * @param values The values of the new bindings
+     * @param env    The environment being extended, which will be the parent of the
+     *               new environment that is created.
+     */
+    public Environment(ArrayList<String> ids, ArrayList<T> values, Environment<T> env) {
+        parent = env;
+        dictionary = new HashMap<>();
+        for (int i = 0; i < ids.size(); i++) {
+            put(ids.get(i), values.get(i));
+        }
+    }
+
+    /**
+     * Create an instance of a global environment suitable for evaluating an
+     * program.
      *
      * @return the <code>Environment</code> created.
      */
     public static <T extends SMPLValue<T>> Environment<T> makeGlobalEnv() {
-        Environment<T> result =  new Environment<>();
+        Environment<T> result = new Environment<>();
 
         // add builtin functions
-        result.put("pair", null);
-        result.put("car", null);
-        result.put("cdr", null);
-        result.put("pair?", null);
+        ArrayList<String> params = new ArrayList<>();
+        params.add(0, "e1");
+        params.add(0, "e2");
+        Exp body = new ExpCreatePair("e1", "e2");
+        ExpProcedure procedure = new ExpProcedure(params, body);
+        SMPLProcedure makePair = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("pair", (T) makePair);
+
+        params = new ArrayList<>();
+        params.add(0, "p");
+        body = new ExpPairCAR("p");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure carPair = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("car", (T) carPair);
+
+        params = new ArrayList<>();
+        params.add(0, "p");
+        body = new ExpPairCDR("p");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure cdrPair = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("cdr", (T) cdrPair);
+
+        params = new ArrayList<>();
+        params.add(0, "p");
+        body = new ExpIsPair("p");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure isPair = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("pair?", (T) isPair);
+
+        params = new ArrayList<>();
+        params.add(0, "p");
+        body = new ExpCreateList("p");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure makeList = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("list", (T) makeList);
+
+        params = new ArrayList<>();
+        params.add(0, "vec");
+        body = new ExpGetSize("vec");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure getSize = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("size", (T) getSize);
+
+        params = new ArrayList<>();
+        params.add(0, "e1");
+        params.add(0, "e2");
+        body = new ExpIsEqv("e1", "e2");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure isEquivalent = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("eqv?", (T) isEquivalent);
+        
+        params = new ArrayList<>();
+        params.add(0, "e1");
+        params.add(0, "e2");
+        body = new ExpIsEqual("e1", "e2");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure isEqual = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("equal?", null);
+
+        params = new ArrayList<>();
+        params.add("e1");
+        params.add("e2");
+        params.add("e3");
+        body = new ExpSubstring("e1", "e2", "e3");
+        procedure = new ExpProcedure(params, body);
+        SMPLProcedure getSubstring = new SMPLProcedure(procedure, (Environment<SMPLValue<?>>) result);
+        result.put("substr", (T) getSubstring);
 
         return result;
     }

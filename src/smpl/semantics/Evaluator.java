@@ -4,24 +4,40 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import smpl.builtin.ExpCreateList;
+import smpl.builtin.ExpCreatePair;
+import smpl.builtin.ExpGetSize;
+import smpl.builtin.ExpIsEqual;
+import smpl.builtin.ExpIsEqv;
+import smpl.builtin.ExpIsPair;
+import smpl.builtin.ExpPairCAR;
+import smpl.builtin.ExpPairCDR;
+import smpl.builtin.ExpSubstring;
 import smpl.exceptions.SMPLException;
 
 import smpl.semantics.Environment;
 
 import smpl.types.SMPLValue;
+import smpl.types.compound.SMPLPair;
+import smpl.types.compound.SMPLVector;
 import smpl.types.SMPLProcedure;
 import smpl.types.SMPLString;
+import smpl.types.SMPLType;
+import smpl.syntax.ast.core.Exp;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.MultiExp;
 import smpl.syntax.ast.ExpProcedure;
 import smpl.syntax.ast.ExpRead;
 import smpl.syntax.ast.ExpReadInt;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
+import smpl.syntax.ast.ExpIndexVector;
 import smpl.syntax.ast.ExpLT;
 import smpl.syntax.ast.ExpLTEQ;
+import smpl.syntax.ast.ExpList;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpAnd;
 import smpl.syntax.ast.ExpBAND;
@@ -33,6 +49,7 @@ import smpl.syntax.ast.ExpNEQ;
 import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
+import smpl.syntax.ast.ExpCall;
 import smpl.syntax.ast.ExpPrint;
 import smpl.syntax.ast.ExpPrintLn;
 import smpl.syntax.ast.ExpDiv;
@@ -41,6 +58,7 @@ import smpl.syntax.ast.ExpGT;
 import smpl.syntax.ast.ExpGTEQ;
 import smpl.syntax.ast.ExpMod;
 import smpl.syntax.ast.ExpUnary;
+import smpl.syntax.ast.ExpVector;
 
 public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?>> {
     /* For this visitor, the argument passed to all visit
@@ -92,6 +110,20 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         env.put(sd.getVar(), result);
         return result;
     }
+
+    public SMPLValue<?> visitMultiExp(MultiExp exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            ArrayList<Exp> exps = exp.getExps();
+
+            ArrayList<SMPLValue<?>> values = new ArrayList<>();
+
+            for(Exp e: exps) {
+                values.add(e.visit(this, env));
+            }
+
+            // TODO: create a tuple data type to handle these values
+            return null;
+        }
 
     public SMPLValue<?> visitExpPrint(ExpPrint exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
@@ -302,8 +334,197 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return env.get(exp.getId());
     }
 
+    public SMPLValue<?> visitExpCreatePair(ExpCreatePair exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> v1 = env.get(exp.getHead());
+            SMPLValue<?> v2 = env.get(exp.getTail());
+
+            return new SMPLPair(v1, v2);
+    }
+
+    public SMPLValue<?> visitExpPairCAR(ExpPairCAR exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> p = env.get(exp.getParam());
+
+            return ((SMPLPair) p).getObj1();
+    }
+
+    public SMPLValue<?> visitExpPairCDR(ExpPairCDR exp, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> p = env.get(exp.getParam());
+
+            return ((SMPLPair) p).getObj2();
+    }
+
+    public SMPLValue<?> visitExpIsPair(ExpIsPair exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> p = env.get(exp.getParam());
+
+            return SMPLValue.make(p.getType() == SMPLType.PAIR);
+    }
+
+    public SMPLValue<?> visitExpGetSize(ExpGetSize exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> p = env.get(exp.getParam());
+
+            ArrayList<SMPLValue<?>> values = ((SMPLVector) p).getValues();
+
+            return SMPLValue.make(values.size());
+    }
+
+    public SMPLValue<?> visitExpIsEqv(ExpIsEqv exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> e1 = env.get(exp.getParam1());
+            SMPLValue<?> e2 = env.get(exp.getParam2());
+
+            return SMPLValue.make(e1.equals(e2));
+    }
+
+    public SMPLValue<?> visitExpIsEqual(ExpIsEqual exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> e1 = env.get(exp.getParam1());
+            SMPLValue<?> e2 = env.get(exp.getParam2());
+
+            return e1.eq(e2);
+    }
+
+    public SMPLValue<?> visitExpSubstring(ExpSubstring exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> e1 = env.get(exp.getParam1());
+            SMPLValue<?> e2 = env.get(exp.getParam2());
+            SMPLValue<?> e3 = env.get(exp.getParam3());
+
+            String st = e1.stringValue();
+            int start = e2.intValue();
+            int end = e3.intValue();
+
+            return SMPLValue.make(st.substring(start, end));
+    }
+
+    public SMPLValue<?> visitExpCreateList(ExpCreateList exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> p = env.get(exp.getParam());
+            SMPLPair rest = ((SMPLPair) env.get("prest"));
+
+            SMPLPair head = new SMPLPair();
+            head.setObj1(p);
+            head.setObj2(rest);
+            return head;
+    }
+
+    public SMPLValue<?> visitExpList(ExpList exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            ArrayList<Exp> content = exp.getContent();
+
+            SMPLPair head = new SMPLPair();
+            SMPLPair current = head;
+            SMPLPair next = new SMPLPair();
+            for (int i = 0; i < content.size(); i++) {
+                current.setObj1(content.get(i).visit(this, env));
+                current.setObj2(next);
+                current = next;
+                next = new SMPLPair();
+            }
+
+            return head;
+    }
+
+    public SMPLValue<?> visitExpVector(ExpVector exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            ArrayList<Exp> content = exp.getContent();
+
+            ArrayList<SMPLValue<?>> values = new ArrayList<>();
+            for (Exp e: content) {
+                values.add(e.visit(this, env));
+            }
+
+            return new SMPLVector(values);
+    }
+
+    public SMPLValue<?> visitExpIndexVector(ExpIndexVector exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+            SMPLValue<?> vector = exp.getVecExp().visit(this, env);
+
+            SMPLValue<?> index = exp.getIndexExp().visit(this, env);
+
+            ArrayList<SMPLValue<?>> values = ((SMPLVector) vector).getValues();
+
+            return values.get(index.intValue());
+    }
+
     @Override
     public SMPLValue<?> visitProcDefinition(ExpProcedure exp, Environment<SMPLValue<?>> env) throws SMPLException {
         return new SMPLProcedure(exp, env);
+    }
+
+    public SMPLValue<?> visitProcCall(ExpCall call, Environment<SMPLValue<?>> env) throws SMPLException {
+        Exp exp = call.getCaller();
+        SMPLValue<?> proc = exp.visit(this, env);
+
+        // map arguments to function paramters
+        ArrayList<Exp> arguments = call.getArguments();
+
+        Environment<SMPLValue<?>> closingEnv = ((SMPLProcedure) proc).getClosingEnv();
+
+        String namedParam = ((SMPLProcedure) proc).getProcExp().getNamedParameter();
+
+        Environment<SMPLValue<?>> xctx;
+        
+        if (namedParam != null) {
+            // evaluate the expressions and create a linked list of pairs
+            // that can be referenced by namedParam
+            SMPLPair head = new SMPLPair();
+            SMPLPair current = head;
+            SMPLPair next = new SMPLPair();
+            for (int i = 0; i < arguments.size(); i++) {
+                current.setObj1(arguments.get(i).visit(this, env));
+                current.setObj2(next);
+                current = next;
+                next = new SMPLPair();
+            }
+
+            xctx = new Environment<>(new String[] {namedParam}, new SMPLValue[] {head});
+
+        } else {
+            ArrayList<String> parameters = ((SMPLProcedure) proc).getProcExp().getParameters();
+
+            ArrayList<SMPLValue<?>> values = new ArrayList<>();
+
+            int numParams = parameters.size();
+            int numArgs = arguments.size();
+
+            if (numParams < numArgs) {
+                for (int i = 0; i < numParams; i++) {
+                    values.add(arguments.get(i).visit(this, env));
+                }
+                // place the remaining arguments in a list
+                SMPLPair head = new SMPLPair();
+                SMPLPair current = head;
+                SMPLPair next = new SMPLPair();
+                for (int i = numParams; i < numArgs; i++) {
+                    current.setObj1(arguments.get(i).visit(this, env));
+                    current.setObj2(next);
+                    current = next;
+                    next = new SMPLPair();
+                }
+
+                parameters.add("prest");
+                values.add(head);
+
+                xctx = new Environment<>(parameters, values, closingEnv);
+
+            } else {
+                // bind parameters to each argument
+                for (int i = 0; i < arguments.size(); i++) {
+                    values.add(arguments.get(i).visit(this, env));
+                }
+    
+                xctx = new Environment<>(parameters, values, closingEnv);
+            }
+        }
+        
+        // evaluate the function with respect to new bindings
+        return ((SMPLProcedure) proc).getProcExp().getBody().visit(this, xctx);
+
     }
 }

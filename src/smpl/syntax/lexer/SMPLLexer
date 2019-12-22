@@ -66,14 +66,18 @@ binary = [01]
 
 hexadecimal = [a-zA-Z0-9]
 
-identifier = [^\(\)\[\]\{\}\"\',:#\s][^\(\)\[\]\{\}\"\',:\s]*
+identifier = [^\(\)\[\]\{\}\"\',;:#\s][^\(\)\[\]\{\}\"\',;:\s]*
 
 // adapted from the jflex manual
-singleLineComment = "//"[^\n\r]*{nl}?
 
-multiLineComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+lineTerminator = \r|\n|\r\n
+inputCharacter = [^\r\n]
 
-comment = {singleLineComment} /*| {multiLineComment} */
+singleLineComment = "//" {inputCharacter}* {lineTerminator}?
+
+multiLineComment = "/*" ([^*] | \*+ [^/*])* "*/"
+
+comment = /* {singleLineComment} |*/ {multiLineComment}
 
 %state STRING
 
@@ -117,10 +121,13 @@ comment = {singleLineComment} /*| {multiLineComment} */
 
 /* SPECIAL CHARACTERS */
 <YYINITIAL>	":=" {return new Symbol(sym.ASSIGN);}
+<YYINITIAL> "[" {return new Symbol(sym.LBRACKET);}
+<YYINITIAL> "]" {return new Symbol(sym.RBRACKET);}
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
 <YYINITIAL> "{" {return new Symbol(sym.LBRACE);}
 <YYINITIAL> "}" {return new Symbol(sym.RBRACE);}
+<YYINITIAL> ":" {return new Symbol(sym.COLON);}
 <YYINITIAL> ";" {return new Symbol(sym.SEMI);}
 <YYINITIAL> "," {return new Symbol(sym.COMMA);}
 
@@ -159,7 +166,7 @@ comment = {singleLineComment} /*| {multiLineComment} */
         Integer.parseInt(val, 16));
 }
 
-<YYINITIAL> [0-9]*\.[0-9]+ {
+<YYINITIAL> ([0-9]*\.[0-9]+) | ([0-9]+\.[0-9]*) {
     // DOUBLE
     return new Symbol(sym.DOUBLE,
             new Double(yytext()));
@@ -237,11 +244,8 @@ comment = {singleLineComment} /*| {multiLineComment} */
     \\               { string.append('\\'); }
 }
 
-<YYINITIAL> [^\s\"\']+ { 
-    // ensures all tokens without whitespace separating excluding
-    // quotations, parentheses, brackets, braces, colons and commas are
-    // caught and dealt with as an error if it doesn't match any of our 
-    // language's rules.
+/* error fallback */
+<YYINITIAL> [^] { 
     String msg = String.format("Unrecognised Token: %s", yytext());
     throw new TokenException(msg);
 }

@@ -8,41 +8,28 @@ import smpl.exceptions.SMPLTypeException;
 import smpl.types.SMPLValue;
 import smpl.types.SMPLType;
 
-public class SMPLPair extends SMPLValue<SMPLPair> {
+public class SMPLVector extends SMPLValue<SMPLVector> {
     
-    SMPLValue<?> obj1, obj2;
+    ArrayList<SMPLValue<?>> values;
 
-    public SMPLPair() {
-        this(null, null);
+    public SMPLVector() {
+        super();
     }
 
-    public SMPLPair(SMPLValue<?> p1, SMPLValue<?> p2) {
-        obj1 = p1;
-        obj2 = p2;
+    public SMPLVector(ArrayList<SMPLValue<?>> values) {
+        this.values = values;
     }
 
-    public SMPLValue<?> getObj1() {
-        return obj1;
-    }
-
-    public SMPLValue<?> getObj2() {
-        return obj2;
-    }
-
-    public void setObj1(SMPLValue<?> obj1) {
-        this.obj1 = obj1;
-    }
-
-    public void setObj2(SMPLValue<?> obj2) {
-        this.obj2 = obj2;
+    public ArrayList<SMPLValue<?>> getValues() {
+        return values;
     }
     
     public SMPLType getType() {
-        return SMPLType.PAIR;
+        return SMPLType.VECTOR;
     }
     
-    public SMPLPair add(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for +: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector add(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for +: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -52,8 +39,8 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The difference as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLPair sub(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for -: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector sub(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for -: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -63,8 +50,8 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The product as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLPair mul(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for *: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector mul(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for *: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -74,8 +61,8 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The quotient as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLPair div(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for /: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector div(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for /: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -85,8 +72,8 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The residue modulo arg as a new instance of SMPLValue
      * @throws smpl.exceptions.SMPLException
      */
-    public SMPLPair mod(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for %: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector mod(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for %: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -96,8 +83,8 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The result of exponentiation as a new instance of SMPLReal
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLPair pow(SMPLValue<?> arg) throws SMPLException {
-        String msg = String.format("unsupported operand type(s) for ^: 'PAIR' and '%s'", arg.getType());
+    public SMPLVector pow(SMPLValue<?> arg) throws SMPLException {
+        String msg = String.format("unsupported operand type(s) for ^: 'VECTOR' and '%s'", arg.getType());
         throw new SMPLTypeException(msg);
     }
 
@@ -107,15 +94,17 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
-    public SMPLPair unary(String arg) throws SMPLException {
-        String msg = String.format("unsupported operand type for %s: 'PAIR'", arg);
+    public SMPLVector unary(String arg) throws SMPLException {
+        String msg = String.format("unsupported operand type for %s: 'VECTOR'", arg);
         throw new SMPLTypeException(msg);
     }
 
     public String toString() {
-        if (obj1 == null && obj2 == null) {
-            return "#e";
+        String st = "[:";
+        for(int i = 0; i < values.size() - 1; i++) {
+            st += values.get(i).toString() + ", ";
         }
-        return "<" + obj1.toString() + ", " + obj2.toString() + ">";
+        st += values.get(values.size() - 1).toString() + ":]";
+        return st;
     }
 }

@@ -13,6 +13,8 @@ import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.*;
 
 import smpl.types.SMPLValue;
+import smpl.types.compound.SMPLPair;
+import smpl.types.compound.SMPLVector;
 
 /* Preliminaries to set up and use the scanner.  */
 parser code {:
@@ -65,7 +67,8 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal LPAREN, RPAREN, LBRACE, RBRACE, COMMA, SEMI, ASSIGN;
+terminal LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE;
+terminal COMMA, SEMI, COLON, ASSIGN;
 
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, POW;
@@ -82,6 +85,7 @@ terminal AND, OR, NOT;
 // list concatenation
 terminal CONCAT;
 
+// empty list
 terminal NIL;
 
 // keywords
@@ -95,6 +99,9 @@ terminal Double DOUBLE;
 terminal String STRING;
 terminal Character CHARACTER;
 terminal Boolean BOOLEAN;
+non terminal ExpList listExp;
+non terminal ExpVector vecExp;
+non terminal ExpIndexVector indexVecExp;
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -102,6 +109,19 @@ non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtDefinition definition;
 non terminal Exp expression;
+non terminal Exp blockExp;
+non terminal Exp multiExp;
+non terminal ArrayList<Exp> expressions;
+non terminal ArrayList<Exp> expressionList;
+
+/* procedure non-terminals */
+non terminal Exp procExp;
+non terminal String parameter;
+non terminal ArrayList<String> parameters;
+non terminal ArrayList<String> parameterList;
+non terminal Exp callExp;
+non terminal ArrayList<Exp> arguments;
+non terminal ArrayList<Exp> argumentList;
 
 /* side effect non-terminals */
 non terminal Exp ioStmt;
@@ -143,17 +163,79 @@ stmt ::= definition:d {: RESULT = d; :} |
 definition ::= ID:id ASSIGN expression:e SEMI {:
 		            RESULT = new StmtDefinition(id, e); :};
 
+multiExp ::= LPAREN expressions:exps RPAREN {: RESULT = new MultiExp(exps); :};
+
 expression ::= logicExp:l {: RESULT = l; :} |
-               ioStmt:io {: RESULT = io; :};
+               procExp:p {: RESULT = p; :} |
+               ioStmt:io {: RESULT = io; :} |
+               LBRACE stmtList:body RBRACE {: RESULT = body; :};
+
+expressions ::= expression:e expressionList:el {:
+                    el.add(0, e);
+                    RESULT = el;
+                :} |
+                empty {: RESULT = new ArrayList(); :};
+
+expressionList ::= COMMA expression:e expressionList:el {:
+                        el.add(0, e);
+                        RESULT = el;
+                    :} |
+                    empty {: RESULT = new ArrayList(); :};
+
+listExp ::= LBRACKET expressions:e RBRACKET {:
+                RESULT = new ExpList(e); :};
+
+vecExp ::= LBRACKET COLON expressions:e COLON RBRACKET {:
+                RESULT = new ExpVector(e); :};
+
+indexVecExp ::= primary:p LBRACKET expression:n RBRACKET {:
+                    RESULT = new ExpIndexVector(p, n); :};
+
+procExp ::= PROC LPAREN parameters:p RPAREN expression:body {:
+                RESULT = new ExpProcedure(p, body); :} |
+            PROC ID:id expression:body {:
+                RESULT = new ExpProcedure(id, body);:};
+
+parameter ::= ID:id {: RESULT = id; :};
+
+parameters ::= parameter:p parameterList:pl {:
+                    pl.add(0, p);
+                    RESULT = pl;
+                :} |
+                empty {: RESULT = new ArrayList(); :};
+
+parameterList ::= COMMA parameter:p parameterList:pl {:
+                    pl.add(0, p);
+                    RESULT = pl;
+                :} |
+                empty {: RESULT = new ArrayList(); :};
+
+
+arguments ::= expression:e argumentList:al {:
+                    al.add(0, e);
+                    RESULT = al;
+                :} |
+                empty {: RESULT = new ArrayList(); :};
+
+argumentList ::= COMMA expression:e argumentList:al {:
+                    al.add(0, e);
+                    RESULT = al;
+                :} |
+                empty {: RESULT = new ArrayList(); :};
+
+callExp ::= primary:p LPAREN arguments:a RPAREN {:
+                RESULT = new ExpCall(p, a); :} |
+            CALL LPAREN primary:p COMMA arguments:a RPAREN {:
+                RESULT =  new ExpCall(p, a); :};
 
 ioStmt ::= PRINT LPAREN expression:e RPAREN {:
-                    RESULT = new ExpPrint(e); :} |
+                RESULT = new ExpPrint(e); :} |
            PRINTLN LPAREN expression:e RPAREN {:
-                    RESULT = new ExpPrintLn(e); :} |
+                RESULT = new ExpPrintLn(e); :} |
            READ LPAREN RPAREN {:
-                    RESULT = new ExpRead(); :} |
+                RESULT = new ExpRead(); :} |
            READINT LPAREN RPAREN {:
-                    RESULT = new ExpReadInt(); :};
+                RESULT = new ExpReadInt(); :};
 
 logicExp ::= logicExp:e OR orComp:o {:
                 RESULT = new ExpOr(e, o); :} |
@@ -209,12 +291,17 @@ unary ::= PLUS unary:u {: RESULT = new ExpUnary("+", u); :} |
 
 primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
 	        ID:id {: RESULT = new ExpId(id); :} |
+            callExp:cl {: RESULT = cl; :} |
+            vecExp:vec {: RESULT = vec; :} |
+            indexVecExp:ivec {: RESULT = ivec; :} |
+            listExp:lst {: RESULT = lst; :} |
 	        LPAREN expression:e RPAREN {: RESULT = e; :};
 
 literal ::= INT:ilit {: RESULT = SMPLValue.make(ilit); :} |
             DOUBLE:dlit {: RESULT = SMPLValue.make(dlit); :} |
             STRING:slit {: RESULT = SMPLValue.make(slit); :} |
             CHARACTER:chlit {: RESULT = SMPLValue.make(chlit); :} |
-            BOOLEAN:blit {: RESULT = SMPLValue.make(blit); :};
+            BOOLEAN:blit {: RESULT = SMPLValue.make(blit); :} |
+            NIL:nil {: RESULT = new SMPLPair(); :};
 
 empty ::= ;
