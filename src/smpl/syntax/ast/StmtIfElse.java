@@ -40,7 +40,7 @@ public class StmtIfElse extends Statement {
 
     @Override
     public String toString() {
-        String st = "if (" + predicate.toString() + ") " + then.toString();
+        String st = "if " + predicate.toString() + " " + then.toString();
         if (alt != null) {
             st += "else " + alt.toString();
         }

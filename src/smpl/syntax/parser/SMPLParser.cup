@@ -7,6 +7,7 @@ import java.util.*;
 import smpl.exceptions.SMPLSyntaxException;
 
 import smpl.syntax.Binding;
+import smpl.syntax.CaseClause;
 
 import smpl.syntax.lexer.SMPLLexer;
 
@@ -125,8 +126,11 @@ non terminal ArrayList<Binding> bindingsAux;
 non terminal StmtLet letStmt;
 
 /* conditional non-terminals */
-non terminal Statement ifStmt;
-non terminal Statement thenStmt;
+non terminal StmtIfElse ifStmt;
+non terminal StmtCase caseStmt;
+non terminal CaseClause clause;
+non terminal ArrayList<CaseClause> clauses;
+non terminal ArrayList<CaseClause> clauseLst;
 
 /* procedure non-terminals */
 non terminal Exp procExp;
@@ -175,12 +179,31 @@ closedStmt ::= assignment:a SEMI {: RESULT = a; :} |
                outStmt:io SEMI {: RESULT = io; :} |
                letStmt:let SEMI {: RESULT = let; :} |
                ifStmt:i {: RESULT = i; :} |
+               caseStmt:c {: RESULT = c; :} |
                expression:e SEMI {: RESULT = new Statement(e); :};
 
 openStmt ::= IF logicExp:pred THEN stmt:then {:
                 RESULT = new StmtIfElse(pred, then); :} |
              IF logicExp:pred THEN closedStmt:then ELSE openStmt:alt {:
                 RESULT = new StmtIfElse(pred, then, alt); :};
+
+caseStmt ::= CASE LBRACE clauses:c RBRACE {:
+                RESULT = new StmtCase(c); :};
+
+clause ::= logicExp:pred COLON stmt:action {:
+                RESULT = new CaseClause(pred, action); :};
+
+clauses ::= clause:c clauseLst:clst {:
+                clst.add(0, c);
+                RESULT = clst;
+            :} |
+            empty {: RESULT = new ArrayList(); :};
+
+clauseLst ::= COMMA clause:c clauseLst:clst {:
+                clst.add(0, c);
+                RESULT = clst;
+              :} |
+              empty {: RESULT = new ArrayList(); :};
 
 ifStmt ::= IF logicExp:pred THEN closedStmt:then ELSE closedStmt:alt {: 
                 RESULT = new StmtIfElse(pred, then, alt); :};

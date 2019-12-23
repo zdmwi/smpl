@@ -28,6 +28,7 @@ import smpl.syntax.ast.core.Exp;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtAssignment;
+import smpl.syntax.ast.StmtCase;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
 import smpl.syntax.ast.StmtIfElse;
@@ -46,6 +47,7 @@ import smpl.syntax.ast.ExpLT;
 import smpl.syntax.ast.ExpLTEQ;
 import smpl.syntax.ast.ExpList;
 import smpl.syntax.Binding;
+import smpl.syntax.CaseClause;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpAnd;
 import smpl.syntax.ast.ExpBAND;
@@ -175,6 +177,21 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
             }
             return null;
         }
+    }
+
+    public SMPLValue<?> visitStmtCase(StmtCase sc,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        ArrayList<CaseClause> clauses = sc.getClauses();
+
+        for (CaseClause clause: clauses) {
+            SMPLBoolean predicate = (SMPLBoolean) clause.getPred().visit(this, env);
+            if (predicate.boolValue()) {
+                Exp action = clause.getAction();
+                result = action.visit(this, env);
+                return result;
+            }
+        }
+        return null;
     }
 
     public SMPLValue<?> visitMultiExp(MultiExp exp,

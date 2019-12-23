@@ -20,4 +20,7 @@ public class Binding {
 	    return valExp;
     }
 
+    public String toString() {
+        return var + " := " + valExp.toString();
+    }
 }

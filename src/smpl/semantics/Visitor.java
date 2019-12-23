@@ -14,6 +14,7 @@ import smpl.exceptions.SMPLException;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtAssignment;
+import smpl.syntax.ast.StmtCase;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
 import smpl.syntax.ast.StmtIfElse;
@@ -87,6 +88,7 @@ public interface Visitor<S, T> {
 
     // conditionals
     public T visitStmtIfElse(StmtIfElse exp, S arg) throws SMPLException;
+    public T visitStmtCase(StmtCase exp, S arg) throws SMPLException;
 
     // builtins
     public T visitExpCreatePair(ExpCreatePair exp, S arg) throws SMPLException;
