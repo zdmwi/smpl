@@ -191,6 +191,10 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
                 return result;
             }
         }
+        Exp defaultAction = sc.getDefaultAction();
+        if (defaultAction != null) {
+            return defaultAction.visit(this, env);
+        }
         return null;
     }
 

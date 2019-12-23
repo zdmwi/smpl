@@ -182,10 +182,12 @@ ifStmt ::= IF logicExp:pred THEN expression:then {:
            IF logicExp:pred THEN expression:then ELSE expression:alt {:
                 RESULT = new StmtIfElse(pred, then, alt); :};
         
-caseStmt ::= CASE LBRACE clauses:c RBRACE {:
+caseStmt ::= CASE LBRACE clauses:c ELSE COLON stmt:d RBRACE {:
+                RESULT = new StmtCase(c, d); :} |
+             CASE LBRACE clauses:c RBRACE {:
                 RESULT = new StmtCase(c); :};
 
-clause ::= logicExp:pred COLON expression:action {:
+clause ::= logicExp:pred COLON stmt:action {:
                 RESULT = new CaseClause(pred, action); :};
 
 clauses ::= clause:c clauseLst:clst {:
@@ -194,7 +196,7 @@ clauses ::= clause:c clauseLst:clst {:
             :} |
             empty {: RESULT = new ArrayList(); :};
 
-clauseLst ::= SEMI clause:c clauseLst:clst {:
+clauseLst ::= clause:c clauseLst:clst {:
                 clst.add(0, c);
                 RESULT = clst;
               :} |

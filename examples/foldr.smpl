@@ -1,0 +1,4 @@
+def foldr proc(op, base, lst)
+    if lst = #e
+        then base
+    else op(car(lst), foldr(op, base, cdr(lst)));

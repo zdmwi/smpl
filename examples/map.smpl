@@ -2,11 +2,3 @@ def map proc(f, list)
   if list = #e
     then #e
   else pair(f(car(list)), map(f, cdr(list)));
-
-def fn proc(x) x + 1;
-
-x := list(1,2,3);
-
-x := map(fn, x);
-
-print(x);
