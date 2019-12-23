@@ -110,10 +110,8 @@ non terminal ExpIndexVector indexVecExp;
 non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
-non terminal Statement openStmt;
-non terminal Statement closedStmt;
-non terminal StmtAssignment assignment;
-non terminal StmtDefinition definition;
+non terminal StmtAssignment assignStmt;
+non terminal StmtDefinition defStmt;
 non terminal Exp expression;
 non terminal Exp multiExp;
 non terminal ArrayList<String> IDs;
@@ -171,26 +169,23 @@ stmtList ::= stmtList:lst stmt:s {:
 		        RESULT = new StmtSequence(s);
 		     :};
 
-stmt ::= closedStmt:c {: RESULT = c; :} |
-         openStmt:o {: RESULT = o; :};
+stmt ::= assignStmt:a SEMI {: RESULT = a; :} |
+         defStmt:d {: RESULT = d; :} |
+         outStmt:io SEMI {: RESULT = io; :} |
+         letStmt:let SEMI {: RESULT = let; :} |
+         ifStmt:i SEMI {: RESULT = i; :} |
+         caseStmt:c {: RESULT = c; :} |
+         expression:e SEMI {: RESULT = new Statement(e); :};
 
-closedStmt ::= assignment:a SEMI {: RESULT = a; :} |
-               definition:d SEMI {: RESULT = d; :} |
-               outStmt:io SEMI {: RESULT = io; :} |
-               letStmt:let SEMI {: RESULT = let; :} |
-               ifStmt:i {: RESULT = i; :} |
-               caseStmt:c {: RESULT = c; :} |
-               expression:e SEMI {: RESULT = new Statement(e); :};
-
-openStmt ::= IF logicExp:pred THEN stmt:then {:
+ifStmt ::= IF logicExp:pred THEN expression:then {:
                 RESULT = new StmtIfElse(pred, then); :} |
-             IF logicExp:pred THEN closedStmt:then ELSE openStmt:alt {:
+           IF logicExp:pred THEN expression:then ELSE expression:alt {:
                 RESULT = new StmtIfElse(pred, then, alt); :};
-
+        
 caseStmt ::= CASE LBRACE clauses:c RBRACE {:
                 RESULT = new StmtCase(c); :};
 
-clause ::= logicExp:pred COLON stmt:action {:
+clause ::= logicExp:pred COLON expression:action {:
                 RESULT = new CaseClause(pred, action); :};
 
 clauses ::= clause:c clauseLst:clst {:
@@ -199,31 +194,28 @@ clauses ::= clause:c clauseLst:clst {:
             :} |
             empty {: RESULT = new ArrayList(); :};
 
-clauseLst ::= COMMA clause:c clauseLst:clst {:
+clauseLst ::= SEMI clause:c clauseLst:clst {:
                 clst.add(0, c);
                 RESULT = clst;
               :} |
               empty {: RESULT = new ArrayList(); :};
 
-ifStmt ::= IF logicExp:pred THEN closedStmt:then ELSE closedStmt:alt {: 
-                RESULT = new StmtIfElse(pred, then, alt); :};
+assignStmt ::= IDs:id ASSIGN expressions:e  {:
+                RESULT = new StmtAssignment(id, e); :};
 
-assignment ::= IDs:id ASSIGN expressions:e {:
-		            RESULT = new StmtAssignment(id, e); :};
+defStmt ::= DEF ID:id procExp:e {:
+                RESULT = new StmtDefinition(id, e); :};
 
-definition ::= DEF ID:id expression:e {:
-                    RESULT = new StmtDefinition(id, e); :};
-
-procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:
+procExp ::= PROC LPAREN IDs:p RPAREN stmt:body {:
                 RESULT = new ExpProcedure(p, body); :} |
-            PROC ID:id expression:body {:
-                RESULT = new ExpProcedure(id, body);:};
+            PROC ID:id stmt:body {:
+                RESULT = new ExpProcedure(id, body); :};
 
 IDs ::= ID:id IDList:idl {:
-                idl.add(0, id);
-                RESULT = idl;
-            :} |
-            empty {: RESULT = new ArrayList(); :};
+            idl.add(0, id);
+            RESULT = idl;
+        :} |
+        empty {: RESULT = new ArrayList(); :};
 
 IDList ::= COMMA ID:id IDList:idl {:
                 idl.add(0, id);
@@ -281,9 +273,9 @@ callExp ::= primary:p LPAREN expressions:e RPAREN {:
             CALL LPAREN primary:p COMMA expressions:e RPAREN {:
                 RESULT =  new ExpCall(p, e); :};
 
-outStmt ::= PRINT LPAREN logicExp:e RPAREN {:
+outStmt ::= PRINT LPAREN expression:e RPAREN  {:
                 RESULT = new StmtPrint(e); :} |
-            PRINTLN LPAREN logicExp:e RPAREN {:
+            PRINTLN LPAREN expression:e RPAREN  {:
                 RESULT = new StmtPrintLn(e); :};
 
 inStmt ::= READ LPAREN RPAREN {:

@@ -168,10 +168,10 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         SMPLBoolean truth = (SMPLBoolean) predicate.visit(this, env);
 
         if(truth.boolValue()) {
-            Statement thenClause = (Statement) ifelse.getThenClause();
+            Exp thenClause = ifelse.getThenClause();
             return thenClause.visit(this, env);
         } else {
-            Statement elseClause = (Statement) ifelse.getElseClause();
+            Exp elseClause = ifelse.getElseClause();
             if (elseClause != null) {
                 return elseClause.visit(this, env);
             }

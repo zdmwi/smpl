@@ -1,0 +1,6 @@
+def gcd proc(a, b)
+    case {
+        a < b: gcd(b, a);
+        b = 0: a;
+        else : gcd(b, a % b);
+    }

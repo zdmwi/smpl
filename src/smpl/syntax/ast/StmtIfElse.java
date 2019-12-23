@@ -6,16 +6,16 @@ import smpl.syntax.ast.core.Exp;
 
 public class StmtIfElse extends Statement {
     Exp predicate;
-    Statement then, alt;
+    Exp then, alt;
 
-    public StmtIfElse(Exp predicate, Statement then, Statement alt) {
+    public StmtIfElse(Exp predicate, Exp then, Exp alt) {
         super();
         this.predicate = predicate;
         this.then = then;
         this.alt = alt;
     }
 
-    public StmtIfElse(Exp predicate, Statement then) {
+    public StmtIfElse(Exp predicate, Exp then) {
         super();
         this.predicate = predicate;
         this.then = then;
@@ -25,11 +25,11 @@ public class StmtIfElse extends Statement {
 	    return predicate;
     }
 
-    public Statement getThenClause() {
+    public Exp getThenClause() {
 	    return then;
     }
 
-    public Statement getElseClause() {
+    public Exp getElseClause() {
         return alt;
     }
     

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import smpl.exceptions.SMPLException;
 import smpl.semantics.Visitor;
 import smpl.syntax.CaseClause;
-import smpl.syntax.ast.core.Exp;
 
 public class StmtCase extends Statement {
     ArrayList<CaseClause> clauses;
