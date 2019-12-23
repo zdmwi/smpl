@@ -21,6 +21,7 @@ import smpl.types.SMPLValue;
 import smpl.types.compound.SMPLPair;
 import smpl.types.compound.SMPLTuple;
 import smpl.types.compound.SMPLVector;
+import smpl.types.SMPLBoolean;
 import smpl.types.SMPLProcedure;
 import smpl.types.SMPLType;
 import smpl.syntax.ast.core.Exp;
@@ -29,6 +30,7 @@ import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtAssignment;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.StmtIfElse;
 import smpl.syntax.ast.StmtLet;
 import smpl.syntax.ast.StmtPrint;
 import smpl.syntax.ast.StmtPrintLn;
@@ -155,6 +157,21 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         // create new env as child of current
         Environment<SMPLValue<?>> newEnv = new Environment<>(vars, vals, env);
         return body.visit(this, newEnv);
+    }
+
+    public SMPLValue<?> visitStmtIfElse(StmtIfElse ifelse,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        Exp predicate = ifelse.getPredicate();
+
+        SMPLBoolean truth = (SMPLBoolean) predicate.visit(this, env);
+
+        if(truth.boolValue()) {
+            Statement thenClause = (Statement) ifelse.getThenClause();
+            return thenClause.visit(this, env);
+        } else {
+            Statement elseClause = (Statement) ifelse.getElseClause();
+            return elseClause.visit(this, env);
+        }
     }
 
     public SMPLValue<?> visitMultiExp(MultiExp exp,

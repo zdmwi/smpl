@@ -122,11 +122,13 @@ non terminal ArrayList<Binding> bindings;
 non terminal ArrayList<Binding> bindingsAux;
 non terminal StmtLet letStmt;
 
+/* conditional non-terminals */
+non terminal StmtIfElse ifStmt;
+non terminal Statement elseStmt;
+
 /* procedure non-terminals */
 non terminal Exp procExp;
 non terminal Exp callExp;
-non terminal ArrayList<Exp> arguments;
-non terminal ArrayList<Exp> argumentList;
 
 /* side effect non-terminals */
 non terminal Statement inStmt;
@@ -163,16 +165,22 @@ stmtList ::= stmtList:lst stmt:s {:
 		        RESULT = new StmtSequence(s);
 		     :};
 
-stmt ::= assignment:a {: RESULT = a; :} |
-         definition:d {: RESULT = d; :} |
+stmt ::= assignment:a SEMI {: RESULT = a; :} |
+         definition:d SEMI {: RESULT = d; :} |
          outStmt:io SEMI {: RESULT = io; :} |
          letStmt:let SEMI {: RESULT = let; :} |
+         ifStmt:i {: RESULT = i; :} |
 	     expression:e SEMI {: RESULT = new Statement(e); :};
 
-assignment ::= IDs:id ASSIGN expressions:e SEMI {:
+ifStmt ::= IF logicExp:pred THEN stmt:then elseStmt:alt {: 
+                RESULT = new StmtIfElse(pred, then, alt); :};
+
+elseStmt ::= ELSE stmt:alt {: RESULT = alt; :};
+
+assignment ::= IDs:id ASSIGN expressions:e {:
 		            RESULT = new StmtAssignment(id, e); :};
 
-definition ::= DEF ID:id expression:e SEMI {:
+definition ::= DEF ID:id expression:e {:
                     RESULT = new StmtDefinition(id, e); :};
 
 procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:

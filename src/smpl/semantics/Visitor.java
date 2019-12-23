@@ -16,6 +16,7 @@ import smpl.syntax.ast.Statement;
 import smpl.syntax.ast.StmtAssignment;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.StmtIfElse;
 import smpl.syntax.ast.StmtLet;
 import smpl.syntax.ast.StmtPrint;
 import smpl.syntax.ast.StmtPrintLn;
@@ -84,6 +85,8 @@ public interface Visitor<S, T> {
     // proc calls
     public T visitProcCall(ExpCall exp, S arg) throws SMPLException;
 
+    // conditionals
+    public T visitStmtIfElse(StmtIfElse exp, S arg) throws SMPLException;
 
     // builtins
     public T visitExpCreatePair(ExpCreatePair exp, S arg) throws SMPLException;
