@@ -6,11 +6,11 @@ import smpl.syntax.ast.core.Exp;
 
 import smpl.semantics.Visitor;
 
-public class ExpPrintLn extends Exp {
+public class StmtPrint extends Statement {
 
     Exp exp;
 
-    public ExpPrintLn(Exp e) {
+    public StmtPrint(Exp e) {
         exp = e;
     }
 
@@ -19,11 +19,11 @@ public class ExpPrintLn extends Exp {
     }
 
     public <S, T> T visit(Visitor<S,T> v, S arg) throws SMPLException {
-        return v.visitExpPrintLn(this, arg);
+        return v.visitStmtPrint(this, arg);
     }
 
     public String toString() {
-        return "println(" + exp.toString() + ")";
+        return "print(" + exp.toString() + ")";
     }
 }
 

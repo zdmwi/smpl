@@ -10,13 +10,13 @@ import smpl.semantics.Visitor;
 
 public class ExpVector extends Exp {
 
-    ArrayList<Exp> content;
+    ExpSequence content;
 
-    public ExpVector(ArrayList<Exp> content) {
+    public ExpVector(ExpSequence content) {
         this.content = content;
     }
 
-    public ArrayList<Exp> getContent() {
+    public ExpSequence getContent() {
 	    return content;
     }
 
@@ -26,10 +26,11 @@ public class ExpVector extends Exp {
 
   public String toString() {
     String st = "[:";
-    for (int i = 0; i < content.size() - 1; i++) {
-        st += content.get(i).toString() + ", ";
+    ArrayList<Exp> expSeq = content.getSeq();
+    for (int i = 0; i < expSeq.size() - 1; i++) {
+        st += expSeq.get(i).toString() + ", ";
     }
-    st += content.get(content.size() - 1).toString() + ":]";
+    st += expSeq.get(expSeq.size() - 1).toString() + ":]";
     return st;
   }
 }

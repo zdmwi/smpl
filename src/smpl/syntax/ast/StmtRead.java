@@ -6,12 +6,12 @@ import smpl.syntax.ast.core.Exp;
 
 import smpl.semantics.Visitor;
 
-public class ExpRead extends Exp {
+public class StmtRead extends Statement {
 
-    public ExpRead() {}
+    public StmtRead() {}
 
     public <S, T> T visit(Visitor<S,T> v, S arg) throws SMPLException {
-        return v.visitExpRead(this, arg);
+        return v.visitStmtRead(this, arg);
     }
 
     public String toString() {

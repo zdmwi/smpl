@@ -6,6 +6,8 @@ import java.util.*;
 
 import smpl.exceptions.SMPLSyntaxException;
 
+import smpl.syntax.Binding;
+
 import smpl.syntax.lexer.SMPLLexer;
 
 import smpl.syntax.ast.core.Exp;
@@ -107,24 +109,27 @@ non terminal ExpIndexVector indexVecExp;
 non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
-non terminal StmtDefinition definition;
+non terminal StmtAssignment assignment;
 non terminal Exp expression;
-non terminal Exp blockExp;
 non terminal Exp multiExp;
-non terminal ArrayList<Exp> expressions;
-non terminal ArrayList<Exp> expressionList;
+non terminal ArrayList<String> IDs;
+non terminal ArrayList<String> IDList;
+non terminal ExpSequence expressions;
+non terminal ExpSequence expressionList;
+non terminal Binding binding;
+non terminal ArrayList<Binding> bindings;
+non terminal ArrayList<Binding> bindingsAux;
+non terminal StmtLet letStmt;
 
 /* procedure non-terminals */
 non terminal Exp procExp;
-non terminal String parameter;
-non terminal ArrayList<String> parameters;
-non terminal ArrayList<String> parameterList;
 non terminal Exp callExp;
 non terminal ArrayList<Exp> arguments;
 non terminal ArrayList<Exp> argumentList;
 
 /* side effect non-terminals */
-non terminal Exp ioStmt;
+non terminal Statement inStmt;
+non terminal Statement outStmt;
 
 /* logical non-terminals */
 non terminal Exp logicExp;
@@ -157,30 +162,66 @@ stmtList ::= stmtList:lst stmt:s {:
 		        RESULT = new StmtSequence(s);
 		     :};
 
-stmt ::= definition:d {: RESULT = d; :} |
+stmt ::= assignment:a {: RESULT = a; :} |
+         outStmt:io SEMI {: RESULT = io; :} |
+         letStmt:let SEMI {: RESULT = let; :} |
 	     expression:e SEMI {: RESULT = new Statement(e); :};
 
-definition ::= ID:id ASSIGN expression:e SEMI {:
-		            RESULT = new StmtDefinition(id, e); :};
+assignment ::= IDs:id ASSIGN expressions:e SEMI {:
+		            RESULT = new StmtAssignment(id, e); :};
+
+procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:
+                RESULT = new ExpProcedure(p, body); :} |
+            PROC ID:id expression:body {:
+                RESULT = new ExpProcedure(id, body);:};
+
+IDs ::= ID:id IDList:idl {:
+                idl.add(0, id);
+                RESULT = idl;
+            :} |
+            empty {: RESULT = new ArrayList(); :};
+
+IDList ::= COMMA ID:id IDList:idl {:
+                idl.add(0, id);
+                RESULT = idl;
+            :} |
+            empty {: RESULT = new ArrayList(); :};
 
 multiExp ::= LPAREN expressions:exps RPAREN {: RESULT = new MultiExp(exps); :};
 
 expression ::= logicExp:l {: RESULT = l; :} |
                procExp:p {: RESULT = p; :} |
-               ioStmt:io {: RESULT = io; :} |
                LBRACE stmtList:body RBRACE {: RESULT = body; :};
 
 expressions ::= expression:e expressionList:el {:
-                    el.add(0, e);
+                    el.add(e);
                     RESULT = el;
                 :} |
-                empty {: RESULT = new ArrayList(); :};
+                empty {: RESULT = new ExpSequence(); :};
 
 expressionList ::= COMMA expression:e expressionList:el {:
-                        el.add(0, e);
+                        el.add(e);
                         RESULT = el;
                     :} |
-                    empty {: RESULT = new ArrayList(); :};
+                    empty {: RESULT = new ExpSequence(); :};
+
+letStmt ::= LET LPAREN bindings:bs RPAREN expression:body {:
+		        RESULT = new StmtLet(bs, body); :};
+
+binding ::= ID:v ASSIGN logicExp:e {:
+                RESULT = new Binding(v, e); :};
+
+bindings ::= binding:b bindingsAux:bl {:
+                bl.add(0,b);
+                RESULT = bl;
+             :} |
+             empty {: RESULT = new ArrayList(); :};
+
+bindingsAux ::= COMMA binding:b bindingsAux:bl {:
+                    bl.add(0,b);
+                    RESULT = bl;
+                :} |
+		        empty {: RESULT = new ArrayList(); :};
 
 listExp ::= LBRACKET expressions:e RBRACKET {:
                 RESULT = new ExpList(e); :};
@@ -188,54 +229,23 @@ listExp ::= LBRACKET expressions:e RBRACKET {:
 vecExp ::= LBRACKET COLON expressions:e COLON RBRACKET {:
                 RESULT = new ExpVector(e); :};
 
-indexVecExp ::= primary:p LBRACKET expression:n RBRACKET {:
+indexVecExp ::= primary:p LBRACKET logicExp:n RBRACKET {:
                     RESULT = new ExpIndexVector(p, n); :};
 
-procExp ::= PROC LPAREN parameters:p RPAREN expression:body {:
-                RESULT = new ExpProcedure(p, body); :} |
-            PROC ID:id expression:body {:
-                RESULT = new ExpProcedure(id, body);:};
+callExp ::= primary:p LPAREN expressions:e RPAREN {:
+                RESULT = new ExpCall(p, e); :} |
+            CALL LPAREN primary:p COMMA expressions:e RPAREN {:
+                RESULT =  new ExpCall(p, e); :};
 
-parameter ::= ID:id {: RESULT = id; :};
+outStmt ::= PRINT LPAREN logicExp:e RPAREN {:
+                RESULT = new StmtPrint(e); :} |
+           PRINTLN LPAREN logicExp:e RPAREN {:
+                RESULT = new StmtPrintLn(e); :};
 
-parameters ::= parameter:p parameterList:pl {:
-                    pl.add(0, p);
-                    RESULT = pl;
-                :} |
-                empty {: RESULT = new ArrayList(); :};
-
-parameterList ::= COMMA parameter:p parameterList:pl {:
-                    pl.add(0, p);
-                    RESULT = pl;
-                :} |
-                empty {: RESULT = new ArrayList(); :};
-
-
-arguments ::= expression:e argumentList:al {:
-                    al.add(0, e);
-                    RESULT = al;
-                :} |
-                empty {: RESULT = new ArrayList(); :};
-
-argumentList ::= COMMA expression:e argumentList:al {:
-                    al.add(0, e);
-                    RESULT = al;
-                :} |
-                empty {: RESULT = new ArrayList(); :};
-
-callExp ::= primary:p LPAREN arguments:a RPAREN {:
-                RESULT = new ExpCall(p, a); :} |
-            CALL LPAREN primary:p COMMA arguments:a RPAREN {:
-                RESULT =  new ExpCall(p, a); :};
-
-ioStmt ::= PRINT LPAREN expression:e RPAREN {:
-                RESULT = new ExpPrint(e); :} |
-           PRINTLN LPAREN expression:e RPAREN {:
-                RESULT = new ExpPrintLn(e); :} |
-           READ LPAREN RPAREN {:
-                RESULT = new ExpRead(); :} |
+inStmt ::= READ LPAREN RPAREN {:
+                RESULT = new StmtRead(); :} |
            READINT LPAREN RPAREN {:
-                RESULT = new ExpReadInt(); :};
+                RESULT = new StmtReadInt(); :};
 
 logicExp ::= logicExp:e OR orComp:o {:
                 RESULT = new ExpOr(e, o); :} |
@@ -295,6 +305,7 @@ primary ::= literal:lit {: RESULT = new ExpLit(lit); :} |
             vecExp:vec {: RESULT = vec; :} |
             indexVecExp:ivec {: RESULT = ivec; :} |
             listExp:lst {: RESULT = lst; :} |
+            inStmt:in {: RESULT = in; :} |
 	        LPAREN expression:e RPAREN {: RESULT = e; :};
 
 literal ::= INT:ilit {: RESULT = SMPLValue.make(ilit); :} |

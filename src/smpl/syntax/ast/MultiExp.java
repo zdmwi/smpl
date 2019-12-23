@@ -10,17 +10,17 @@ import smpl.semantics.Visitor;
 
 public class MultiExp extends Exp {
 
-    ArrayList<Exp> exps;
+    ExpSequence exps;
 
     public MultiExp() {
 	    super();
     }
 
-    public MultiExp(ArrayList<Exp> e) {
+    public MultiExp(ExpSequence e) {
 	    exps = e;
     }
 
-    public ArrayList<Exp> getExps() {
+    public ExpSequence getExps() {
 	    return exps;
     }
 
@@ -30,11 +30,12 @@ public class MultiExp extends Exp {
 
     public String toString() {
         String st = "(";
-        int n = exps.size();
+        ArrayList<Exp> expSeq = exps.getSeq();
+        int n = expSeq.size();
         for(int i = 0; i < n - 1; i++) {
-            st += exps.get(i).toString() + ", ";
+            st += expSeq.get(i).toString() + ", ";
         }
-        st += exps.get(n).toString() + ")";
+        st += expSeq.get(n).toString() + ")";
 	    return st;
     }
 }

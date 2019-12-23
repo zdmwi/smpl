@@ -19,25 +19,31 @@ import smpl.semantics.Environment;
 
 import smpl.types.SMPLValue;
 import smpl.types.compound.SMPLPair;
+import smpl.types.compound.SMPLTuple;
 import smpl.types.compound.SMPLVector;
 import smpl.types.SMPLProcedure;
-import smpl.types.SMPLString;
 import smpl.types.SMPLType;
 import smpl.syntax.ast.core.Exp;
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
+import smpl.syntax.ast.StmtAssignment;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.StmtLet;
+import smpl.syntax.ast.StmtPrint;
+import smpl.syntax.ast.StmtPrintLn;
+import smpl.syntax.ast.StmtRead;
+import smpl.syntax.ast.StmtReadInt;
 import smpl.syntax.ast.MultiExp;
 import smpl.syntax.ast.ExpProcedure;
-import smpl.syntax.ast.ExpRead;
-import smpl.syntax.ast.ExpReadInt;
+import smpl.syntax.ast.ExpSequence;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpIndexVector;
 import smpl.syntax.ast.ExpLT;
 import smpl.syntax.ast.ExpLTEQ;
 import smpl.syntax.ast.ExpList;
+import smpl.syntax.Binding;
 import smpl.syntax.ast.ExpAdd;
 import smpl.syntax.ast.ExpAnd;
 import smpl.syntax.ast.ExpBAND;
@@ -50,8 +56,6 @@ import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
 import smpl.syntax.ast.ExpCall;
-import smpl.syntax.ast.ExpPrint;
-import smpl.syntax.ast.ExpPrintLn;
 import smpl.syntax.ast.ExpDiv;
 import smpl.syntax.ast.ExpEQ;
 import smpl.syntax.ast.ExpGT;
@@ -111,9 +115,51 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         return result;
     }
 
+    public SMPLValue<?> visitStmtAssignment(StmtAssignment sa, 
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        ArrayList<String> ids = sa.getIds();
+        ArrayList<Exp> exps = sa.getExps().getSeq();
+
+        int n, m;
+        n = ids.size();
+        m = exps.size();
+
+        if (n > m) {
+            throw new SMPLException("Unpacking error: Not enough values to unpack");
+        } else if (n < m) {
+            throw new SMPLException("Unpacking error: Too many values to unpack");
+        } else {
+            for (int i = 0; i < n; i++) {
+                result = exps.get(i).visit(this, env);
+                env.put(ids.get(i), result);
+            }
+        }
+        return result;
+    }
+
+    public SMPLValue<?> visitStmtLet(StmtLet let, Environment<SMPLValue<?>> env) throws SMPLException {
+        ArrayList<Binding> bindings = let.getBindings();
+        Exp body = let.getBody();
+
+        int size = bindings.size();
+        String[] vars = new String[size];
+        SMPLValue<?>[] vals = new SMPLValue<?>[size];
+        Binding b;
+        for (int i = 0; i < size; i++) {
+            b = bindings.get(i);
+            vars[i] = b.getVar();
+            // evaluate each expression in bindings
+            result = b.getValExp().visit(this, env);
+            vals[i] = result;
+        }
+        // create new env as child of current
+        Environment<SMPLValue<?>> newEnv = new Environment<>(vars, vals, env);
+        return body.visit(this, newEnv);
+    }
+
     public SMPLValue<?> visitMultiExp(MultiExp exp,
         Environment<SMPLValue<?>> env) throws SMPLException {
-            ArrayList<Exp> exps = exp.getExps();
+            ArrayList<Exp> exps = exp.getExps().getSeq();
 
             ArrayList<SMPLValue<?>> values = new ArrayList<>();
 
@@ -121,23 +167,22 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
                 values.add(e.visit(this, env));
             }
 
-            // TODO: create a tuple data type to handle these values
-            return null;
+            return new SMPLTuple(values);
         }
 
-    public SMPLValue<?> visitExpPrint(ExpPrint exp, 
+    public SMPLValue<?> visitStmtPrint(StmtPrint exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
         System.out.print(exp.getExp().visit(this, env));
         return null;
     }
 
-    public SMPLValue<?> visitExpPrintLn(ExpPrintLn exp, 
+    public SMPLValue<?> visitStmtPrintLn(StmtPrintLn exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
         System.out.println(exp.getExp().visit(this, env));
         return null;
     }
 
-    public SMPLValue<?> visitExpRead(ExpRead exp, 
+    public SMPLValue<?> visitStmtRead(StmtRead exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
         Scanner scan = new Scanner(System.in);
         try {
@@ -148,7 +193,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         }
     }
 
-    public SMPLValue<?> visitExpReadInt(ExpReadInt exp, 
+    public SMPLValue<?> visitStmtReadInt(StmtReadInt exp, 
         Environment<SMPLValue<?>> env) throws SMPLException {
         Scanner scan = new Scanner(System.in);
         try {
@@ -157,6 +202,21 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         } catch(Exception e) {
             throw new SMPLException("Input Mismatch Error: Value is not an INT");
         }
+    }
+
+    public SMPLValue<?> visitExpSequence(ExpSequence exp,
+        Environment<SMPLValue<?>> env) throws SMPLException {
+        // remember that arg is the environment
+        Exp s;
+        ArrayList<Exp> seq = exp.getSeq();
+        Iterator<Exp> iter = seq.iterator();
+        result = SMPLValue.make(0); // default result
+        while(iter.hasNext()) {
+            s = iter.next();
+            result = s.visit(this, env);
+        }
+        // return last value evaluated
+        return result;
     }
 
     public SMPLValue<?> visitExpAdd(ExpAdd exp, 
@@ -414,7 +474,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
 
     public SMPLValue<?> visitExpList(ExpList exp,
         Environment<SMPLValue<?>> env) throws SMPLException {
-            ArrayList<Exp> content = exp.getContent();
+            ArrayList<Exp> content = exp.getContent().getSeq();
 
             SMPLPair head = new SMPLPair();
             SMPLPair current = head;
@@ -431,7 +491,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
 
     public SMPLValue<?> visitExpVector(ExpVector exp,
         Environment<SMPLValue<?>> env) throws SMPLException {
-            ArrayList<Exp> content = exp.getContent();
+            ArrayList<Exp> content = exp.getContent().getSeq();
 
             ArrayList<SMPLValue<?>> values = new ArrayList<>();
             for (Exp e: content) {
@@ -462,7 +522,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         SMPLValue<?> proc = exp.visit(this, env);
 
         // map arguments to function paramters
-        ArrayList<Exp> arguments = call.getArguments();
+        ArrayList<Exp> arguments = call.getArguments().getSeq();
 
         Environment<SMPLValue<?>> closingEnv = ((SMPLProcedure) proc).getClosingEnv();
 

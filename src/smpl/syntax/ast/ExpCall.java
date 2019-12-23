@@ -10,18 +10,18 @@ import smpl.semantics.Visitor;
 
 public class ExpCall extends Exp {
     Exp caller;
-    ArrayList<Exp> arguments;
+    ExpSequence arguments;
 
     public ExpCall() {
         super();
     }
 
-    public ExpCall(Exp caller, ArrayList<Exp> arguments) {
+    public ExpCall(Exp caller, ExpSequence arguments) {
         this.caller = caller;
         this.arguments = arguments;
     }
 
-    public ArrayList<Exp> getArguments() {
+    public ExpSequence getArguments() {
         return this.arguments;
     }
 
@@ -37,12 +37,12 @@ public class ExpCall extends Exp {
     @Override
     public String toString() {
         String argStr = "";
-        
-        if (arguments.size() > 0) {
-            argStr = arguments.get(0).toString();
+        ArrayList<Exp> expSeq = arguments.getSeq();
+        if (expSeq.size() > 0) {
+            argStr = expSeq.get(0).toString();
         }
-        for (int i = 1; i < arguments.size(); i++) {
-            argStr = argStr + ", " + arguments.get(i);
+        for (int i = 1; i < expSeq.size(); i++) {
+            argStr = argStr + ", " + expSeq.get(i);
         }
         return String.format("%s(%s)", caller.toString(), argStr);
     }

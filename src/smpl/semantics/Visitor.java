@@ -13,12 +13,17 @@ import smpl.exceptions.SMPLException;
 
 import smpl.syntax.ast.core.SMPLProgram;
 import smpl.syntax.ast.Statement;
+import smpl.syntax.ast.StmtAssignment;
 import smpl.syntax.ast.StmtSequence;
 import smpl.syntax.ast.StmtDefinition;
+import smpl.syntax.ast.StmtLet;
+import smpl.syntax.ast.StmtPrint;
+import smpl.syntax.ast.StmtPrintLn;
+import smpl.syntax.ast.StmtRead;
+import smpl.syntax.ast.StmtReadInt;
 import smpl.syntax.ast.MultiExp;
 import smpl.syntax.ast.ExpProcedure;
-import smpl.syntax.ast.ExpRead;
-import smpl.syntax.ast.ExpReadInt;
+import smpl.syntax.ast.ExpSequence;
 import smpl.syntax.ast.ExpLit;
 import smpl.syntax.ast.ExpId;
 import smpl.syntax.ast.ExpIndexVector;
@@ -42,8 +47,6 @@ import smpl.syntax.ast.ExpGT;
 import smpl.syntax.ast.ExpGTEQ;
 import smpl.syntax.ast.ExpMod;
 import smpl.syntax.ast.ExpPow;
-import smpl.syntax.ast.ExpPrint;
-import smpl.syntax.ast.ExpPrintLn;
 import smpl.syntax.ast.ExpUnary;
 import smpl.syntax.ast.ExpVector;
 
@@ -64,9 +67,18 @@ public interface Visitor<S, T> {
     public T visitStatement(Statement exp, S arg) throws SMPLException;
     public T visitStmtSequence(StmtSequence exp, S arg) throws SMPLException;
     public T visitStmtDefinition(StmtDefinition sd, S arg) throws SMPLException;
+    public T visitStmtAssignment(StmtAssignment exp, S arg) throws SMPLException;
     public T visitProcDefinition(ExpProcedure exp, S arg) throws SMPLException;
+    public T visitStmtLet(StmtLet letExp, S arg) throws SMPLException;
+    
+    // i/o statements
+    public T visitStmtPrint(StmtPrint exp, S arg) throws SMPLException;
+    public T visitStmtPrintLn(StmtPrintLn exp, S arg) throws SMPLException;
+    public T visitStmtRead(StmtRead exp, S arg) throws SMPLException;
+    public T visitStmtReadInt(StmtReadInt exp, S arg) throws SMPLException;
 
     // multi expressions
+    public T visitExpSequence(ExpSequence exp, S arg) throws SMPLException;
     public T visitMultiExp(MultiExp exp, S arg) throws SMPLException;
 
     // proc calls
@@ -84,11 +96,6 @@ public interface Visitor<S, T> {
     public T visitExpIsEqual(ExpIsEqual exp, S arg) throws SMPLException;
     public T visitExpSubstring(ExpSubstring exp, S arg) throws SMPLException;
 
-    // i/o expressions
-    public T visitExpPrint(ExpPrint exp, S arg) throws SMPLException;
-    public T visitExpPrintLn(ExpPrintLn exp, S arg) throws SMPLException;
-    public T visitExpRead(ExpRead exp, S arg) throws SMPLException;
-    public T visitExpReadInt(ExpReadInt exp, S arg) throws SMPLException;
 
     // arithmetic expressions
     public T visitExpAdd(ExpAdd exp, S arg) throws SMPLException;
