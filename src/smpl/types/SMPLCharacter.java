@@ -1,8 +1,6 @@
 package smpl.types;
 
 public class SMPLCharacter extends SMPLInt {
-    
-    char value;
 
     public SMPLCharacter() {
         this('\u0000');
@@ -17,6 +15,6 @@ public class SMPLCharacter extends SMPLInt {
     }
 
     public String toString() {
-        return "#c" + String.valueOf(value);
+        return "#c" + String.valueOf((char) value);
     }
 }
