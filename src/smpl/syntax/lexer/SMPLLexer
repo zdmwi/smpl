@@ -75,9 +75,9 @@ inputCharacter = [^\r\n]
 
 singleLineComment = "//" {inputCharacter}* {lineTerminator}?
 
-multiLineComment = "/*" ([^*] | \*+ [^/*])* "*/"
+multiLineComment = "/*"([^*]|\*+[^*/])*\*+"/"
 
-comment = /* {singleLineComment} |*/ {multiLineComment}
+comment = {singleLineComment} | {multiLineComment}
 
 %state STRING
 

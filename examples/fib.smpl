@@ -1,4 +1,5 @@
 def fib proc(n)
-  if n <= 1
-    then 1
-  else fib(n - 1) + fib(n - 2);
+    /* return the nth fibonnaci */
+    if n <= 1
+        then 1
+    else fib(n - 1) + fib(n - 2);

@@ -1,4 +1,6 @@
 def foldr proc(op, base, lst)
+    /* fold right LST using binary operator 'op'
+       and base value 'base' */
     if lst = #e
         then base
     else op(car(lst), foldr(op, base, cdr(lst)));

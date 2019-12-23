@@ -1,4 +1,6 @@
 def append proc(l1, l2)
+    /* copy l1 and then attach l2 to it
+       and return the resulting list.*/
     if l1 = #e
         then l2
     else cons(car(l1), append(cdr(l1), l2));

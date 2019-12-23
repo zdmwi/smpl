@@ -1,4 +1,5 @@
 def gcd proc(a, b)
+    /* Euclidean algorithm for greatest common divisor */
     case {
         a < b: gcd(b, a);
         b = 0: a;

@@ -1,0 +1,5 @@
+def swap proc(a, b) {
+    tmp := a;
+    a := b;
+    b := tmp;
+};

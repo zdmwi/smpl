@@ -1,4 +1,6 @@
 def map proc(f, list)
-  if list = #e
-    then #e
-  else pair(f(car(list)), map(f, cdr(list)));
+    /* return a new list containing f(x)
+       f(x) for each x in list */
+    if list = #e
+        then #e
+    else pair(f(car(list)), map(f, cdr(list)));
