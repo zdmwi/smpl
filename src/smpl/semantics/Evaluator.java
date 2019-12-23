@@ -170,7 +170,10 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
             return thenClause.visit(this, env);
         } else {
             Statement elseClause = (Statement) ifelse.getElseClause();
-            return elseClause.visit(this, env);
+            if (elseClause != null) {
+                return elseClause.visit(this, env);
+            }
+            return null;
         }
     }
 

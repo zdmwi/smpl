@@ -109,6 +109,8 @@ non terminal ExpIndexVector indexVecExp;
 non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
+non terminal Statement openStmt;
+non terminal Statement closedStmt;
 non terminal StmtAssignment assignment;
 non terminal StmtDefinition definition;
 non terminal Exp expression;
@@ -123,8 +125,8 @@ non terminal ArrayList<Binding> bindingsAux;
 non terminal StmtLet letStmt;
 
 /* conditional non-terminals */
-non terminal StmtIfElse ifStmt;
-non terminal Statement elseStmt;
+non terminal Statement ifStmt;
+non terminal Statement thenStmt;
 
 /* procedure non-terminals */
 non terminal Exp procExp;
@@ -165,17 +167,23 @@ stmtList ::= stmtList:lst stmt:s {:
 		        RESULT = new StmtSequence(s);
 		     :};
 
-stmt ::= assignment:a SEMI {: RESULT = a; :} |
-         definition:d SEMI {: RESULT = d; :} |
-         outStmt:io SEMI {: RESULT = io; :} |
-         letStmt:let SEMI {: RESULT = let; :} |
-         ifStmt:i {: RESULT = i; :} |
-	     expression:e SEMI {: RESULT = new Statement(e); :};
+stmt ::= closedStmt:c {: RESULT = c; :} |
+         openStmt:o {: RESULT = o; :};
 
-ifStmt ::= IF logicExp:pred THEN stmt:then elseStmt:alt {: 
+closedStmt ::= assignment:a SEMI {: RESULT = a; :} |
+               definition:d SEMI {: RESULT = d; :} |
+               outStmt:io SEMI {: RESULT = io; :} |
+               letStmt:let SEMI {: RESULT = let; :} |
+               ifStmt:i {: RESULT = i; :} |
+               expression:e SEMI {: RESULT = new Statement(e); :};
+
+openStmt ::= IF logicExp:pred THEN stmt:then {:
+                RESULT = new StmtIfElse(pred, then); :} |
+             IF logicExp:pred THEN closedStmt:then ELSE openStmt:alt {:
                 RESULT = new StmtIfElse(pred, then, alt); :};
 
-elseStmt ::= ELSE stmt:alt {: RESULT = alt; :};
+ifStmt ::= IF logicExp:pred THEN closedStmt:then ELSE closedStmt:alt {: 
+                RESULT = new StmtIfElse(pred, then, alt); :};
 
 assignment ::= IDs:id ASSIGN expressions:e {:
 		            RESULT = new StmtAssignment(id, e); :};
@@ -252,7 +260,7 @@ callExp ::= primary:p LPAREN expressions:e RPAREN {:
 
 outStmt ::= PRINT LPAREN logicExp:e RPAREN {:
                 RESULT = new StmtPrint(e); :} |
-           PRINTLN LPAREN logicExp:e RPAREN {:
+            PRINTLN LPAREN logicExp:e RPAREN {:
                 RESULT = new StmtPrintLn(e); :};
 
 inStmt ::= READ LPAREN RPAREN {:

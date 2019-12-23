@@ -9,9 +9,16 @@ public class StmtIfElse extends Statement {
     Statement then, alt;
 
     public StmtIfElse(Exp predicate, Statement then, Statement alt) {
+        super();
         this.predicate = predicate;
         this.then = then;
         this.alt = alt;
+    }
+
+    public StmtIfElse(Exp predicate, Statement then) {
+        super();
+        this.predicate = predicate;
+        this.then = then;
     }
 
     public Exp getPredicate() {
