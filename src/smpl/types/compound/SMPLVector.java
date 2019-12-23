@@ -6,6 +6,7 @@ import smpl.exceptions.SMPLException;
 import smpl.exceptions.SMPLTypeException;
 
 import smpl.types.SMPLValue;
+import smpl.types.SMPLBoolean;
 import smpl.types.SMPLType;
 
 public class SMPLVector extends SMPLValue<SMPLVector> {
@@ -26,6 +27,38 @@ public class SMPLVector extends SMPLValue<SMPLVector> {
     
     public SMPLType getType() {
         return SMPLType.VECTOR;
+    }
+
+    public SMPLBoolean eq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(false);
+        }
+        ArrayList<SMPLValue<?>> argLst = ((SMPLVector) arg).getValues();
+        if (values.size() != argLst.size()) {
+            return make(false);
+        }
+
+        SMPLBoolean truth = make(true);
+        for (int i = 0; i < values.size(); i++) {
+            truth = truth.and((SMPLBoolean) values.get(i).eq(argLst.get(i)));
+        }
+        return truth;
+    }
+
+    public SMPLBoolean neq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(false);
+        }
+        ArrayList<SMPLValue<?>> argLst = ((SMPLVector) arg).getValues();
+        if (values.size() != argLst.size()) {
+            return make(false);
+        }
+
+        SMPLBoolean truth = make(true);
+        for (int i = 0; i < values.size(); i++) {
+            truth = truth.and((SMPLBoolean) values.get(i).neq(argLst.get(i)));
+        }
+        return truth;
     }
     
     public SMPLVector add(SMPLValue<?> arg) throws SMPLException {

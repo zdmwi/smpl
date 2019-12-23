@@ -26,6 +26,9 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLBoolean eq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(false);
+        }
         return make(value == arg.stringValue());
     }
 
@@ -36,6 +39,9 @@ public class SMPLString extends SMPLValue<SMPLString> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLBoolean neq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(true);
+        }
         return make(value != arg.stringValue());
     }
     

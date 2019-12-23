@@ -6,6 +6,7 @@ import smpl.exceptions.SMPLException;
 import smpl.exceptions.SMPLTypeException;
 
 import smpl.types.SMPLValue;
+import smpl.types.SMPLBoolean;
 import smpl.types.SMPLType;
 
 public class SMPLPair extends SMPLValue<SMPLPair> {
@@ -39,6 +40,20 @@ public class SMPLPair extends SMPLValue<SMPLPair> {
     
     public SMPLType getType() {
         return SMPLType.PAIR;
+    }
+
+    public SMPLBoolean eq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(false);
+        }
+        return (SMPLBoolean) ((SMPLPair) arg).getObj1().eq(getObj1());
+    }
+
+    public SMPLBoolean neq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(true);
+        }
+        return (SMPLBoolean) ((SMPLPair) arg).getObj1().neq(getObj1());
     }
     
     public SMPLPair add(SMPLValue<?> arg) throws SMPLException {

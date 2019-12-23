@@ -1,25 +1,36 @@
 package smpl.types;
 
+import smpl.exceptions.SMPLException;
 import smpl.semantics.Environment;
 import smpl.syntax.ast.ExpProcedure;
 import java.util.ArrayList;
 
-/**
- *
- * @author newts
- */
 public class SMPLProcedure extends SMPLValue<SMPLProcedure> {
     ExpProcedure procExp;
     Environment<SMPLValue<?>> closingEnv;
 
     /**
      * Create a new instance of a user-defined procedure.
-     * @param funExp The function expression that was evaluated
+     * @param procExp The function expression that was evaluated
      * @param closingEnv The environment over which this function is closed
      */
     public SMPLProcedure(ExpProcedure procExp, Environment<SMPLValue<?>> closingEnv) {
         this.procExp = procExp;
         this.closingEnv = closingEnv;
+    }
+    
+    public SMPLBoolean eq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(false);
+        }
+        return make(this.equals(arg));
+    }
+
+    public SMPLBoolean neq(SMPLValue<?> arg) throws SMPLException {
+        if (arg.getType() != getType()) {
+            return make(true);
+        }
+        return make(!this.equals(arg));
     }
     
     @Override

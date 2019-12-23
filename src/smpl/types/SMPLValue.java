@@ -71,7 +71,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under addition
      */
     public SMPLValue<?> add(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation div called with non-numeric type");
+        throw new SMPLTypeException("Operation '+' called with non-numeric type");
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under subtraction
      */
     public SMPLValue<?> sub(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation sub called with non-numeric type");
+        throw new SMPLTypeException("Operation '-' called with non-numeric type");
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under multiplication
      */
     public SMPLValue<?> mul(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation mul called with non-numeric type");
+        throw new SMPLTypeException("Operation '*' called with non-numeric type");
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> div(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation div called with non-numeric type");
+        throw new SMPLTypeException("Operation '/' called with non-numeric type");
     }
     
     /**
@@ -111,7 +111,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> mod(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation mod called with non-numeric type");
+        throw new SMPLTypeException("Operation '%' called with non-numeric type");
     }
 
     /**
@@ -121,7 +121,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> pow(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation mod called with non-numeric type");
+        throw new SMPLTypeException("Operation '^' called with non-numeric type");
     }
 
     /**
@@ -131,7 +131,8 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> unary(String arg) throws SMPLException {
-        throw new SMPLTypeException("Operation unary called with non-string type");
+        String msg = String.format("Unary operation '%s' called with non-numeric type");
+        throw new SMPLTypeException(msg);
     }
 
     /**
@@ -141,7 +142,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> or(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation OR called with non-boolean type");
+        throw new SMPLTypeException("Operation 'or' called with non-boolean type");
     }
 
     /**
@@ -151,7 +152,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> and(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation and called with non-boolean type");
+        throw new SMPLTypeException("Operation 'and' called with non-boolean type");
     }
 
     /**
@@ -161,7 +162,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> not() throws SMPLException {
-        throw new SMPLTypeException("Operation and called with non-boolean type");
+        throw new SMPLTypeException("Operation 'not' called with non-boolean type");
     }
 
     /**
@@ -171,7 +172,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> band(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation bitwise AND called with non-numeric type");
+        throw new SMPLTypeException("Operation '&' called with non-numeric type");
     }
 
     /**
@@ -181,7 +182,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> bor(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException("Operation bitwise OR called with non-numeric type");
+        throw new SMPLTypeException("Operation '|' called with non-numeric type");
     }
 
     /**
@@ -191,7 +192,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> bnot() throws SMPLException {
-        throw new SMPLTypeException("Operation bitwise NOT called with non-numeric type");
+        throw new SMPLTypeException("Operation '~' called with non-numeric type");
     }
 
     /**
@@ -211,7 +212,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> gt(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException();
+        throw new SMPLTypeException("Operation '>' called with non-numeric type");
     }
 
     /**
@@ -221,7 +222,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> gteq(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException();
+        throw new SMPLTypeException("Operation '>=' called with non-numeric type");
     }
 
     /**
@@ -231,7 +232,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> lt(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException();
+        throw new SMPLTypeException("Operation '<' called with non-numeric type");
     }
 
     /**
@@ -241,7 +242,7 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
      */
     public SMPLValue<?> lteq(SMPLValue<?> arg) throws SMPLException {
-        throw new SMPLTypeException();
+        throw new SMPLTypeException("Operation '<=' called with non-numeric type");
     }
 
     /**
