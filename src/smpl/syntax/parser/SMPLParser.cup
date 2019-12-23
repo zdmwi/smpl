@@ -110,6 +110,7 @@ non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtAssignment assignment;
+non terminal StmtDefinition definition;
 non terminal Exp expression;
 non terminal Exp multiExp;
 non terminal ArrayList<String> IDs;
@@ -163,12 +164,16 @@ stmtList ::= stmtList:lst stmt:s {:
 		     :};
 
 stmt ::= assignment:a {: RESULT = a; :} |
+         definition:d {: RESULT = d; :} |
          outStmt:io SEMI {: RESULT = io; :} |
          letStmt:let SEMI {: RESULT = let; :} |
 	     expression:e SEMI {: RESULT = new Statement(e); :};
 
 assignment ::= IDs:id ASSIGN expressions:e SEMI {:
 		            RESULT = new StmtAssignment(id, e); :};
+
+definition ::= DEF ID:id expression:e SEMI {:
+                    RESULT = new StmtDefinition(id, e); :};
 
 procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:
                 RESULT = new ExpProcedure(p, body); :} |
