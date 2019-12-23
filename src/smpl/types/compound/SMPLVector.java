@@ -101,10 +101,14 @@ public class SMPLVector extends SMPLValue<SMPLVector> {
 
     public String toString() {
         String st = "[:";
-        for(int i = 0; i < values.size() - 1; i++) {
-            st += values.get(i).toString() + ", ";
+        if (values.size() > 0) {
+            for(int i = 0; i < values.size() - 1; i++) {
+                st += values.get(i).toString() + ", ";
+            }
+            st += values.get(values.size() - 1).toString();
         }
-        st += values.get(values.size() - 1).toString() + ":]";
+
+        st +=":]";
         return st;
     }
 }
