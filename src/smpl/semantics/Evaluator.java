@@ -128,10 +128,12 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         n = ids.size();
         m = exps.size();
 
-        if (n > m) {
-            throw new SMPLException("Unpacking error: Not enough values to unpack");
+        if (n == 0 && m == 0) {
+            throw new SMPLException("SyntaxError: invalid syntax");
+        } else if (n > m) {
+            throw new SMPLException("UnpackingError: not enough values to unpack");
         } else if (n < m) {
-            throw new SMPLException("Unpacking error: Too many values to unpack");
+            throw new SMPLException("UnpackingError: too many values to unpack");
         } else {
             for (int i = 0; i < n; i++) {
                 result = exps.get(i).visit(this, env);
