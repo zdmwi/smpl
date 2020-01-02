@@ -178,7 +178,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
             if (elseClause != null) {
                 return elseClause.visit(this, env);
             }
-            return null;
+            return result;
         }
     }
 
@@ -198,7 +198,7 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
         if (defaultAction != null) {
             return defaultAction.visit(this, env);
         }
-        return null;
+        return result;
     }
 
     public SMPLValue<?> visitMultiExp(MultiExp exp,

@@ -113,7 +113,10 @@ non terminal Statement stmt;
 non terminal StmtAssignment assignStmt;
 non terminal StmtDefinition defStmt;
 non terminal Exp expression;
-non terminal Exp multiExp;
+non terminal Statement closedStmt;
+non terminal Statement openStmt;
+
+// non terminal Exp multiExp;
 non terminal ArrayList<String> IDs;
 non terminal ArrayList<String> IDList;
 non terminal ExpSequence expressions;
@@ -123,18 +126,22 @@ non terminal ArrayList<Binding> bindings;
 non terminal ArrayList<Binding> bindingsAux;
 non terminal StmtLet letStmt;
 
+// non terminal Exp subVectorExp;
+
 /* conditional non-terminals */
-non terminal StmtIfElse ifStmt;
+non terminal StmtIfElse openIfStmt;
+non terminal StmtIfElse closedIfStmt;
 non terminal StmtCase caseStmt;
 non terminal CaseClause clause;
 non terminal ArrayList<CaseClause> clauses;
 non terminal ArrayList<CaseClause> clauseLst;
 
-non terminal Exp binopExp;
-
 /* procedure non-terminals */
 non terminal Exp procExp;
 non terminal Exp callExp;
+
+/* compound operation non-terminals */
+non terminal Exp concatExp;
 
 /* side effect non-terminals */
 non terminal Statement inStmt;
@@ -171,43 +178,47 @@ stmtList ::= stmtList:lst stmt:s {:
 		        RESULT = new StmtSequence(s);
 		     :};
 
-stmt ::= assignStmt:a SEMI {: RESULT = a; :} |
-         defStmt:d SEMI {: RESULT = d; :} |
-         outStmt:io SEMI {: RESULT = io; :} |
-         letStmt:let SEMI {: RESULT = let; :} |
-         ifStmt:i SEMI {: RESULT = i; :} |
-         caseStmt:c {: RESULT = c; :} |
-         expression:e SEMI {: RESULT = new Statement(e); :};
+stmt ::= openStmt:os {: RESULT = os; :} |
+         closedStmt:cs SEMI {: RESULT = cs; :};
 
-ifStmt ::= IF logicExp:pred THEN expression:then {:
-                RESULT = new StmtIfElse(pred, then); :} |
-           IF logicExp:pred THEN expression:then ELSE expression:alt {:
-                RESULT = new StmtIfElse(pred, then, alt); :};
+openStmt ::= openIfStmt:oi {: RESULT = oi; :};
+
+closedStmt ::= closedIfStmt:ci {: RESULT = ci; :} |
+               assignStmt:a {: RESULT = a; :} |
+               expression:e {: RESULT = new Statement(e); :};
+
+expression ::= procExp:p {: RESULT = p; :} |
+               concatExp:c {: RESULT = c; :} |
+               letStmt:lt {: RESULT = lt; :} |
+               caseStmt:c {: RESULT = c; :} |
+               outStmt:o {: RESULT = o; :} |
+               defStmt:d {: RESULT = d; :} |
+               LBRACE stmtList:body RBRACE {: RESULT = body; :};
+
+expressions ::= expression:e expressionList:el {:
+                    el.add(e);
+                    RESULT = el;
+                :} |
+                empty {: RESULT = new ExpSequence(); :};
+
+expressionList ::= COMMA expression:e expressionList:el {:
+                        el.add(e);
+                        RESULT = el;
+                    :} |
+                    empty {: RESULT = new ExpSequence(); :};
+
+openIfStmt ::= IF expression:pred THEN stmt:then {:
+                    RESULT = new StmtIfElse(pred, then); :} |
+               IF expression:pred THEN closedStmt:then ELSE openStmt:alt {:
+                    RESULT = new StmtIfElse(pred, then, alt); :};
+
+closedIfStmt ::= IF expression:pred THEN closedStmt:then ELSE closedStmt:alt {:
+                    RESULT = new StmtIfElse(pred, then, alt); :};
         
-caseStmt ::= CASE LBRACE clauses:c ELSE COLON stmt:d RBRACE {:
-                RESULT = new StmtCase(c, d); :} |
-             CASE LBRACE clauses:c RBRACE {:
-                RESULT = new StmtCase(c); :};
-
-clause ::= logicExp:pred COLON stmt:action {:
-                RESULT = new CaseClause(pred, action); :};
-
-clauses ::= clause:c clauseLst:clst {:
-                clst.add(0, c);
-                RESULT = clst;
-            :} |
-            empty {: RESULT = new ArrayList(); :};
-
-clauseLst ::= clause:c clauseLst:clst {:
-                clst.add(0, c);
-                RESULT = clst;
-              :} |
-              empty {: RESULT = new ArrayList(); :};
-
-assignStmt ::= IDs:id ASSIGN expressions:e  {:
+assignStmt ::= IDs:id ASSIGN expressions:e {:
                 RESULT = new StmtAssignment(id, e); :};
 
-defStmt ::= DEF ID:id procExp:e {:
+defStmt ::= DEF ID:id expression:e {:
                 RESULT = new StmtDefinition(id, e); :};
 
 IDs ::= ID:id IDList:idl {:
@@ -222,27 +233,32 @@ IDList ::= COMMA ID:id IDList:idl {:
             :} |
             empty {: RESULT = new ArrayList(); :};
 
-multiExp ::= LPAREN expressions:exps RPAREN {: RESULT = new MultiExp(exps); :};
+// multiExp ::= LPAREN expressions:exps RPAREN {: RESULT = new MultiExp(exps); :};
 
-expression ::= binopExp:b {: RESULT = b; :} |
-               LBRACE stmtList:body RBRACE {: RESULT = body; :};
+caseStmt ::= CASE LBRACE clauses:c ELSE COLON stmt:d RBRACE {:
+                RESULT = new StmtCase(c, d); :} |
+             CASE LBRACE clauses:c RBRACE {:
+                RESULT = new StmtCase(c); :};
 
-expressions ::= procExp:e expressionList:el {:
-                    el.add(e);
-                    RESULT = el;
-                :} |
-                empty {: RESULT = new ExpSequence(); :};
+clause ::= expression:pred COLON stmt:action {:
+                RESULT = new CaseClause(pred, action); :};
 
-expressionList ::= COMMA procExp:e expressionList:el {:
-                        el.add(e);
-                        RESULT = el;
-                    :} |
-                    empty {: RESULT = new ExpSequence(); :};
+clauses ::= clause:c clauseLst:clst {:
+                clst.add(0, c);
+                RESULT = clst;
+            :} |
+            empty {: RESULT = new ArrayList(); :};
+
+clauseLst ::= clause:c clauseLst:clst {:
+                clst.add(0, c);
+                RESULT = clst;
+              :} |
+              empty {: RESULT = new ArrayList(); :};
 
 letStmt ::= LET LPAREN bindings:bs RPAREN expression:body {:
 		        RESULT = new StmtLet(bs, body); :};
 
-binding ::= ID:v ASSIGN procExp:e {:
+binding ::= ID:v ASSIGN expression:e {:
                 RESULT = new Binding(v, e); :};
 
 bindings ::= binding:b bindingsAux:bl {:
@@ -263,6 +279,9 @@ listExp ::= LBRACKET expressions:e RBRACKET {:
 vecExp ::= LBRACKET COLON expressions:e COLON RBRACKET {:
                 RESULT = new ExpVector(e); :};
 
+// subVectorExp ::= primary:size COLON procExp:init {:
+//                     RESULT = new SubVectorExp(size, init); :};
+
 indexVecExp ::= primary:p LBRACKET logicExp:n RBRACKET {:
                     RESULT = new ExpIndexVector(p, n); :};
 
@@ -271,9 +290,9 @@ callExp ::= primary:p LPAREN expressions:e RPAREN {:
             CALL LPAREN primary:p COMMA expressions:e RPAREN {:
                 RESULT =  new ExpCall(p, e); :};
 
-outStmt ::= PRINT LPAREN procExp:e RPAREN  {:
+outStmt ::= PRINT LPAREN expression:e RPAREN  {:
                 RESULT = new StmtPrint(e); :} |
-            PRINTLN LPAREN procExp:e RPAREN  {:
+            PRINTLN LPAREN expression:e RPAREN  {:
                 RESULT = new StmtPrintLn(e); :};
 
 inStmt ::= READ LPAREN RPAREN {:
@@ -281,14 +300,13 @@ inStmt ::= READ LPAREN RPAREN {:
            READINT LPAREN RPAREN {:
                 RESULT = new StmtReadInt(); :};
 
-binopExp ::= listExp:l CONCAT listExp:r {: RESULT = new ExpConcat(l, r); :} |
-             procExp:p {: RESULT = p; :};
-
 procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:
                 RESULT = new ExpProcedure(p, body); :} |
             PROC ID:id expression:body {:
-                RESULT = new ExpProcedure(id, body); :} |
-            logicExp:l {: RESULT = l; :};
+                RESULT = new ExpProcedure(id, body); :};
+
+concatExp ::= listExp:l CONCAT listExp:r {: RESULT = new ExpConcat(l, r); :} |
+              logicExp:lg {: RESULT = lg; :};
 
 logicExp ::= logicExp:e OR orComp:o {:
                 RESULT = new ExpOr(e, o); :} |
