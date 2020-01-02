@@ -126,6 +126,16 @@ public abstract class SMPLValue<T extends SMPLValue<T>> {
 
     /**
      * Compute the remainder of dividing this value by the given value.
+     * @param arg The head of the linked list to be appended to the current list
+     * @return The result of concatenation as a new instance of SMPLValue
+     * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division
+     */
+    public SMPLValue<?> concat(SMPLValue<?> arg) throws SMPLException {
+        throw new SMPLTypeException("Operation '@' called with non-pair type");
+    }
+
+    /**
+     * Compute the remainder of dividing this value by the given value.
      * @param arg The sign of the unary expression
      * @return The signed SMPLValue
      * @throws smpl.exception.SMPLException if there is a type incompatibility between this value and the argument value under division

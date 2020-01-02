@@ -38,6 +38,7 @@ import smpl.syntax.ast.ExpBAND;
 import smpl.syntax.ast.ExpBNOT;
 import smpl.syntax.ast.ExpBOR;
 import smpl.syntax.ast.ExpCall;
+import smpl.syntax.ast.ExpConcat;
 import smpl.syntax.ast.ExpSub;
 import smpl.syntax.ast.ExpMul;
 import smpl.syntax.ast.ExpNEQ;
@@ -133,6 +134,7 @@ public interface Visitor<S, T> {
     public T visitExpLit(ExpLit exp, S arg) throws SMPLException;
     public T visitExpId(ExpId exp, S arg) throws SMPLException;
     public T visitExpList(ExpList exp, S arg) throws SMPLException;
+    public T visitExpConcat(ExpConcat exp, S arg) throws SMPLException;
     public T visitExpVector(ExpVector exp, S arg) throws SMPLException;
     public T visitExpIndexVector(ExpIndexVector exp, S arg) throws SMPLException;
 }

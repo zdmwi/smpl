@@ -60,6 +60,7 @@ import smpl.syntax.ast.ExpNot;
 import smpl.syntax.ast.ExpOr;
 import smpl.syntax.ast.ExpPow;
 import smpl.syntax.ast.ExpCall;
+import smpl.syntax.ast.ExpConcat;
 import smpl.syntax.ast.ExpDiv;
 import smpl.syntax.ast.ExpEQ;
 import smpl.syntax.ast.ExpGT;
@@ -530,6 +531,23 @@ public class Evaluator implements Visitor<Environment<SMPLValue<?>>, SMPLValue<?
             }
 
             return head;
+    }
+
+    public SMPLValue<?> visitExpConcat(ExpConcat exp, Environment<SMPLValue<?>> env) throws SMPLException {
+        ArrayList<Exp> content = exp.getExpL().getContent().getSeq();
+        content.addAll(exp.getExpR().getContent().getSeq());
+
+        SMPLPair head = new SMPLPair();
+        SMPLPair current = head;
+        SMPLPair next = new SMPLPair();
+        for (int i = 0; i < content.size(); i++) {
+            current.setObj1(content.get(i).visit(this, env));
+            current.setObj2(next);
+            current = next;
+            next = new SMPLPair();
+        }
+
+        return head;
     }
 
     public SMPLValue<?> visitExpVector(ExpVector exp,

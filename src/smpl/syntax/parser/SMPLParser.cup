@@ -130,6 +130,8 @@ non terminal CaseClause clause;
 non terminal ArrayList<CaseClause> clauses;
 non terminal ArrayList<CaseClause> clauseLst;
 
+non terminal Exp binopExp;
+
 /* procedure non-terminals */
 non terminal Exp procExp;
 non terminal Exp callExp;
@@ -170,7 +172,7 @@ stmtList ::= stmtList:lst stmt:s {:
 		     :};
 
 stmt ::= assignStmt:a SEMI {: RESULT = a; :} |
-         defStmt:d {: RESULT = d; :} |
+         defStmt:d SEMI {: RESULT = d; :} |
          outStmt:io SEMI {: RESULT = io; :} |
          letStmt:let SEMI {: RESULT = let; :} |
          ifStmt:i SEMI {: RESULT = i; :} |
@@ -208,11 +210,6 @@ assignStmt ::= IDs:id ASSIGN expressions:e  {:
 defStmt ::= DEF ID:id procExp:e {:
                 RESULT = new StmtDefinition(id, e); :};
 
-procExp ::= PROC LPAREN IDs:p RPAREN stmt:body {:
-                RESULT = new ExpProcedure(p, body); :} |
-            PROC ID:id stmt:body {:
-                RESULT = new ExpProcedure(id, body); :};
-
 IDs ::= ID:id IDList:idl {:
             idl.add(0, id);
             RESULT = idl;
@@ -227,17 +224,16 @@ IDList ::= COMMA ID:id IDList:idl {:
 
 multiExp ::= LPAREN expressions:exps RPAREN {: RESULT = new MultiExp(exps); :};
 
-expression ::= logicExp:l {: RESULT = l; :} |
-               procExp:p {: RESULT = p; :} |
+expression ::= binopExp:b {: RESULT = b; :} |
                LBRACE stmtList:body RBRACE {: RESULT = body; :};
 
-expressions ::= expression:e expressionList:el {:
+expressions ::= procExp:e expressionList:el {:
                     el.add(e);
                     RESULT = el;
                 :} |
                 empty {: RESULT = new ExpSequence(); :};
 
-expressionList ::= COMMA expression:e expressionList:el {:
+expressionList ::= COMMA procExp:e expressionList:el {:
                         el.add(e);
                         RESULT = el;
                     :} |
@@ -246,7 +242,7 @@ expressionList ::= COMMA expression:e expressionList:el {:
 letStmt ::= LET LPAREN bindings:bs RPAREN expression:body {:
 		        RESULT = new StmtLet(bs, body); :};
 
-binding ::= ID:v ASSIGN logicExp:e {:
+binding ::= ID:v ASSIGN procExp:e {:
                 RESULT = new Binding(v, e); :};
 
 bindings ::= binding:b bindingsAux:bl {:
@@ -275,15 +271,24 @@ callExp ::= primary:p LPAREN expressions:e RPAREN {:
             CALL LPAREN primary:p COMMA expressions:e RPAREN {:
                 RESULT =  new ExpCall(p, e); :};
 
-outStmt ::= PRINT LPAREN expression:e RPAREN  {:
+outStmt ::= PRINT LPAREN procExp:e RPAREN  {:
                 RESULT = new StmtPrint(e); :} |
-            PRINTLN LPAREN expression:e RPAREN  {:
+            PRINTLN LPAREN procExp:e RPAREN  {:
                 RESULT = new StmtPrintLn(e); :};
 
 inStmt ::= READ LPAREN RPAREN {:
                 RESULT = new StmtRead(); :} |
            READINT LPAREN RPAREN {:
                 RESULT = new StmtReadInt(); :};
+
+binopExp ::= listExp:l CONCAT listExp:r {: RESULT = new ExpConcat(l, r); :} |
+             procExp:p {: RESULT = p; :};
+
+procExp ::= PROC LPAREN IDs:p RPAREN expression:body {:
+                RESULT = new ExpProcedure(p, body); :} |
+            PROC ID:id expression:body {:
+                RESULT = new ExpProcedure(id, body); :} |
+            logicExp:l {: RESULT = l; :};
 
 logicExp ::= logicExp:e OR orComp:o {:
                 RESULT = new ExpOr(e, o); :} |
